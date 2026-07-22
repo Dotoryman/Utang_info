@@ -258,7 +258,7 @@ nav a:not(.nav-cta):hover { border-color: var(--brown); }
 .primary-button.dark { box-shadow: 5px 5px 0 var(--caramel); }
 .meet-visual { min-height: 390px; position: relative; display: grid; place-items: end center; }
 .meet-visual::before { content: ""; position: absolute; inset: 24px 10px 0; background: var(--yellow); border: 3px solid var(--brown); border-radius: 50% 50% 45% 55%; transform: rotate(-5deg); }
-.meet-visual img { width: 300px; position: relative; z-index: 2; mix-blend-mode: multiply; }
+.meet-visual img { width: 300px; position: relative; z-index: 2; mix-blend-mode: darken; }
 .speech-bubble {
   position: absolute;
   right: -10px;
