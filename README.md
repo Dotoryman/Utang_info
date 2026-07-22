@@ -8,17 +8,5 @@
 - TypeScript
 - Vinext / Vite
 
-## 실행
-
-```bash
-pnpm install
-pnpm run dev -- --port 3001
-```
 
 브라우저에서 `http://utangland.cloud`로 접속합니다.
-
-## 빌드
-
-```bash
-pnpm run build
-```
