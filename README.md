@@ -15,7 +15,7 @@ pnpm install
 pnpm run dev -- --port 3001
 ```
 
-브라우저에서 `http://localhost:3001`로 접속합니다.
+브라우저에서 `http://utangland.cloud`로 접속합니다.
 
 ## 빌드
 
