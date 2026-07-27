@@ -1,0 +1,282 @@
+.page {
+  min-height: 100vh;
+  padding: 120px 24px 80px;
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(247, 197, 197, 0.32),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(111, 174, 122, 0.18),
+      transparent 30%
+    ),
+    #fff8f1;
+  color: #2e2a27;
+}
+
+.profileSection {
+  width: min(100%, 820px);
+  margin: 0 auto;
+}
+
+.titleArea {
+  margin-bottom: 34px;
+  text-align: center;
+}
+
+.eyebrow {
+  display: block;
+  margin-bottom: 8px;
+  color: #a47758;
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+}
+
+.titleArea h1 {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  line-height: 1.1;
+}
+
+.titleArea p {
+  margin: 12px 0 0;
+  color: #7b5a45;
+}
+
+.residentCard {
+  position: relative;
+  overflow: hidden;
+  padding: 32px;
+  border: 2px solid #7b5a45;
+  border-radius: 30px;
+  background: #fffdf9;
+  box-shadow:
+    8px 8px 0 #f5e6d3,
+    0 24px 60px rgba(46, 42, 39, 0.12);
+}
+
+.cardDecoration {
+  position: absolute;
+  top: -22px;
+  right: -15px;
+  font-size: 7rem;
+  opacity: 0.08;
+  transform: rotate(20deg);
+}
+
+.cardHeader {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 22px;
+  border-bottom: 1px dashed rgba(123, 90, 69, 0.35);
+}
+
+.cardLabel {
+  color: #a47758;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+.cardHeader h2 {
+  margin: 5px 0 0;
+  font-size: 1.75rem;
+}
+
+.levelBadge {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #f5e6d3;
+  color: #7b5a45;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.cardBody {
+  position: relative;
+  display: grid;
+  grid-template-columns: 170px 1fr;
+  gap: 34px;
+  align-items: center;
+  padding: 32px 0;
+}
+
+.avatarFrame {
+  display: grid;
+  width: 170px;
+  height: 170px;
+  place-items: center;
+  border-radius: 28px;
+  background: #fff8f1;
+  box-shadow: inset 0 0 0 2px #f5e6d3;
+}
+
+.avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 22px;
+  object-fit: cover;
+}
+
+.information {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin: 0;
+}
+
+.informationRow {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 16px;
+  align-items: center;
+}
+
+.informationRow dt {
+  color: #7b5a45;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.informationRow dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-weight: 800;
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 20px;
+  border-top: 1px dashed rgba(123, 90, 69, 0.35);
+  color: #7b5a45;
+  font-size: 0.78rem;
+}
+
+.cardFooter strong {
+  letter-spacing: 0.1em;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.stats article {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 20px;
+  border: 1px solid rgba(123, 90, 69, 0.16);
+  border-radius: 20px;
+  background: rgba(255, 253, 249, 0.88);
+  text-align: center;
+}
+
+.stats strong {
+  font-size: 1.5rem;
+}
+
+.stats span {
+  color: #7b5a45;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.backLink,
+.homeLink {
+  display: block;
+  width: fit-content;
+  margin: 30px auto 0;
+  color: #7b5a45;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.backLink:hover,
+.homeLink:hover {
+  text-decoration: underline;
+}
+
+.messageCard {
+  width: min(100%, 520px);
+  margin: 80px auto 0;
+  padding: 40px 28px;
+  border: 1px solid rgba(123, 90, 69, 0.18);
+  border-radius: 28px;
+  background: #fffdf9;
+  box-shadow: 0 20px 50px rgba(46, 42, 39, 0.1);
+  text-align: center;
+}
+
+.messageCard h1 {
+  margin: 12px 0;
+}
+
+.messageCard p {
+  color: #7b5a45;
+  line-height: 1.7;
+}
+
+.loadingIcon,
+.largeIcon {
+  display: block;
+  font-size: 3rem;
+}
+
+.loadingIcon {
+  animation: bounce 0.9s ease-in-out infinite alternate;
+}
+
+@keyframes bounce {
+  to {
+    transform: translateY(-8px) rotate(8deg);
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 92px 16px 60px;
+  }
+
+  .residentCard {
+    padding: 24px 20px;
+    border-radius: 24px;
+  }
+
+  .cardHeader {
+    flex-direction: column;
+  }
+
+  .cardBody {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .information {
+    width: 100%;
+  }
+
+  .informationRow {
+    grid-template-columns: 78px 1fr;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .cardFooter {
+    flex-direction: column;
+  }
+}

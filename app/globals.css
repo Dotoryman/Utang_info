@@ -54,9 +54,37 @@ main { overflow: hidden; }
   letter-spacing: -.12em;
   transform: rotate(-7deg);
 }
-nav { display: flex; align-items: center; gap: 34px; font-size: .92rem; font-weight: 750; }
-nav a:not(.nav-cta) { padding: 12px 2px; border-bottom: 2px solid transparent; }
-nav a:not(.nav-cta):hover { border-color: var(--brown); }
+.site-header nav {
+  display: flex;
+  align-items: center;
+  gap: 34px;
+  font-size: .92rem;
+  font-weight: 750;
+}
+
+.site-header nav a:not(.nav-cta),
+.nav-auth-button {
+  padding: 12px 2px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.site-header nav a:not(.nav-cta):hover,
+.nav-auth-button:hover {
+  border-bottom-color: var(--brown);
+}
+
+.site-header nav a:not(.nav-cta):focus-visible,
+.nav-auth-button:focus-visible,
+.nav-cta:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 4px;
+}
 .nav-cta {
   padding: 12px 20px;
   border: 2px solid var(--brown);
@@ -64,8 +92,11 @@ nav a:not(.nav-cta):hover { border-color: var(--brown); }
   box-shadow: 3px 3px 0 var(--brown);
   transition: transform .2s, box-shadow .2s;
 }
-.nav-cta:hover { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--brown); }
 
+.nav-cta:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--brown);
+}
 .hero {
   width: min(1180px, calc(100% - 48px));
   min-height: 680px;
@@ -290,7 +321,13 @@ footer > a:last-child { justify-self: end; font-weight: 800; }
 .footer-brand { font-size: .9rem; }
 
 @media (max-width: 900px) {
-  nav > a:not(.nav-cta) { display: none; }
+     .site-header nav > a:not(.nav-cta) {
+    display: none;
+  }
+
+  .site-header nav {
+    gap: 18px;
+  }
   .hero { grid-template-columns: 1fr; padding-top: 50px; }
   .hero-copy { text-align: center; }
   .hero-description { margin-inline: auto; }
@@ -305,6 +342,18 @@ footer > a:last-child { justify-self: end; font-weight: 800; }
 }
 
 @media (max-width: 620px) {
+    .site-header nav {
+    gap: 10px;
+    font-size: .8rem;
+  }
+
+  .nav-auth-button {
+    padding-inline: 0;
+  }
+
+  .nav-cta {
+    padding: 10px 12px;
+  }
   .site-header, .hero, .hello-section, .meet-section { width: min(100% - 32px, 1180px); }
   .site-header { height: 76px; }
   .brand { font-size: .95rem; }

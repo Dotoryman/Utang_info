@@ -1,0 +1,37 @@
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+}
+
+.mark {
+  flex-shrink: 0;
+}
+
+.mark img {
+  display: block;
+  border-radius: 16px;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #2e2a27;
+}
+
+.land {
+  color: #d28d2d;
+}
+
+.slogan {
+  margin-top: 2px;
+  font-size: 0.82rem;
+  color: #7b5a45;
+}
