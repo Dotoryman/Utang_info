@@ -1,4 +1,5 @@
-const ITERATIONS = 210_000;
+const ITERATIONS = 100_000;
+const MAX_SUPPORTED_ITERATIONS = 100_000;
 const KEY_LENGTH = 32;
 const HASH_ALGORITHM = "SHA-256";
 
@@ -12,9 +13,12 @@ function bytesToBase64(bytes: Uint8Array): string {
   return btoa(binary);
 }
 
-function base64ToBytes(value: string): Uint8Array {
+function base64ToBytes(value: string): Uint8Array<ArrayBuffer> {
   const binary = atob(value);
-  const bytes = new Uint8Array(binary.length);
+
+  // ArrayBuffer를 명시적으로 생성해 BufferSource 타입과 호환시킨다.
+  const buffer = new ArrayBuffer(binary.length);
+  const bytes = new Uint8Array(buffer);
 
   for (let index = 0; index < binary.length; index += 1) {
     bytes[index] = binary.charCodeAt(index);
@@ -75,12 +79,27 @@ export async function verifyPassword(
 
   const iterations = Number(iterationsText);
 
-  if (!Number.isInteger(iterations) || iterations <= 0) {
+  if (
+    !Number.isInteger(iterations) ||
+    iterations <= 0 ||
+    iterations > MAX_SUPPORTED_ITERATIONS
+  ) {
     return false;
   }
 
-  const salt = base64ToBytes(saltText);
-  const expectedHash = base64ToBytes(hashText);
+  let salt: Uint8Array<ArrayBuffer>;
+  let expectedHash: Uint8Array<ArrayBuffer>;
+
+  try {
+    salt = base64ToBytes(saltText);
+    expectedHash = base64ToBytes(hashText);
+  } catch {
+    return false;
+  }
+
+  if (salt.byteLength === 0 || expectedHash.byteLength === 0) {
+    return false;
+  }
 
   const keyMaterial = await crypto.subtle.importKey(
     "raw",
@@ -107,6 +126,7 @@ export async function verifyPassword(
     return false;
   }
 
+  // 해시 비교 시간이 값에 따라 달라지지 않도록 전체 바이트를 비교한다.
   let difference = 0;
 
   for (let index = 0; index < actualHash.byteLength; index += 1) {
