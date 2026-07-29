@@ -1,4 +1,5 @@
 import { AuthMenu } from "@/components/auth/AuthMenu";
+import { FortuneExperience } from "@/components/fortune/FortuneExperience";
 
 const instagramUrl =
   "https://www.instagram.com/utang.co?igsh=aWlqMWl5NTVsZG1m";
@@ -79,7 +80,7 @@ export default function Home() {
               우땅이 만나기
               <span aria-hidden="true">↓</span>
             </a>
-
+            <FortuneExperience />
             <a
               className="text-link"
               href={instagramUrl}
