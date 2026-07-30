@@ -64,8 +64,54 @@ export const sessions = sqliteTable(
   ],
 );
 
+export const posts = sqliteTable(
+  "posts",
+  {
+    id: text("id").primaryKey(),
+
+    authorId: text("author_id")
+      .notNull()
+      .references(() => users.id, {
+        onDelete: "cascade",
+      }),
+
+    title: text("title").notNull(),
+
+    content: text("content").notNull(),
+
+    isNotice: integer("is_notice", {
+      mode: "boolean",
+    })
+      .notNull()
+      .default(false),
+
+    createdAt: integer("created_at", {
+      mode: "timestamp",
+    })
+      .notNull()
+      .$defaultFn(() => new Date()),
+
+    updatedAt: integer("updated_at", {
+      mode: "timestamp",
+    })
+      .notNull()
+      .$defaultFn(() => new Date()),
+  },
+  (table) => [
+    index("posts_author_id_index").on(table.authorId),
+    index("posts_created_at_index").on(table.createdAt),
+    index("posts_notice_created_at_index").on(
+      table.isNotice,
+      table.createdAt,
+    ),
+  ],
+);
+
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 
 export type Session = typeof sessions.$inferSelect;
 export type NewSession = typeof sessions.$inferInsert;
+
+export type Post = typeof posts.$inferSelect;
+export type NewPost = typeof posts.$inferInsert;

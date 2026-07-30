@@ -164,7 +164,41 @@ main { overflow: hidden; }
 }
 .primary-button:hover { transform: translate(3px, 3px); box-shadow: 2px 2px 0 var(--yellow); }
 .primary-button span { font-size: 1.2rem; }
-.text-link { font-weight: 800; border-bottom: 2px solid var(--brown); padding-bottom: 5px; }
+.community-button {
+  min-height: 55px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px 22px;
+  border: 3px solid var(--brown);
+  border-radius: 999px;
+  background: var(--caramel);
+  color: #fff;
+  font-weight: 850;
+  line-height: 1;
+  box-shadow: 5px 5px 0 var(--yellow);
+  transition:
+    transform .2s ease,
+    background-color .2s ease,
+    box-shadow .2s ease;
+}
+.community-button:hover {
+  transform: translate(3px, 3px);
+  background: #b97557;
+  box-shadow: 2px 2px 0 var(--yellow);
+}
+.community-button:active {
+  transform: translate(5px, 5px);
+  box-shadow: none;
+}
+.community-button:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 4px;
+}
+.community-button span {
+  font-size: 1.08rem;
+}
 .hero-visual { min-height: 540px; position: relative; display: grid; place-items: center; }
 .sun-shape {
   position: absolute;

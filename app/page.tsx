@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { AuthMenu } from "@/components/auth/AuthMenu";
 import { FortuneExperience } from "@/components/fortune/FortuneExperience";
 
@@ -43,6 +45,7 @@ export default function Home() {
         <nav aria-label="주요 메뉴">
           <a href="#hello">소개</a>
           <a href="#moments">매력</a>
+          <Link href="/community">광장</Link>
 
           <AuthMenu />
 
@@ -81,15 +84,11 @@ export default function Home() {
               <span aria-hidden="true">↓</span>
             </a>
             <FortuneExperience />
-            <a
-              className="text-link"
-              href={instagramUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              @utang.co 구경하기
+            <Link className="community-button" href="/community">
+              <span aria-hidden="true">🌳</span>
+              우땅 광장 가기
               <span aria-hidden="true">↗</span>
-            </a>
+            </Link>
           </div>
         </div>
 

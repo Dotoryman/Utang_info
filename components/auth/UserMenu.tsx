@@ -122,13 +122,13 @@ export function UserMenu({
           </Link>
 
           <Link
-            href="/gallery"
+            href="/community"
             className={styles.menuItem}
             role="menuitem"
             onClick={() => setIsOpen(false)}
           >
-            <span aria-hidden="true">🎨</span>
-            내 작업실
+            <span aria-hidden="true">🌳</span>
+            우땅 광장
           </Link>
 
           <div className={styles.divider} />
