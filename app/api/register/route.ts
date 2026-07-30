@@ -1,4 +1,4 @@
-import { eq, or } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 import { getDb } from "../../../db";
@@ -71,31 +71,16 @@ export async function POST(request: Request) {
   const db = getDb();
 
   const existingUsers = await db
-    .select({
-      email: users.email,
-      nickname: users.nickname,
-    })
+    .select({ email: users.email })
     .from(users)
-    .where(or(eq(users.email, email), eq(users.nickname, nickname)))
+    .where(eq(users.email, email))
     .limit(1);
 
-  const existingUser = existingUsers[0];
-
-  if (existingUser?.email === email) {
+  if (existingUsers.length > 0) {
     return NextResponse.json(
       {
         ok: false,
         message: "이미 가입된 이메일입니다.",
-      },
-      { status: 409 },
-    );
-  }
-
-  if (existingUser?.nickname === nickname) {
-    return NextResponse.json(
-      {
-        ok: false,
-        message: "이미 사용 중인 닉네임입니다.",
       },
       { status: 409 },
     );
@@ -120,7 +105,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "이미 사용 중인 이메일 또는 닉네임입니다.",
+          message: "이미 가입된 이메일입니다.",
         },
         { status: 409 },
       );

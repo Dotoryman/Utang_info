@@ -1,7 +1,9 @@
 export const COMMUNITY_PAGE_SIZE = 10;
+export const COMMUNITY_COMMENT_PAGE_SIZE = 20;
 export const POST_TITLE_MIN_LENGTH = 2;
 export const POST_TITLE_MAX_LENGTH = 80;
 export const POST_CONTENT_MAX_LENGTH = 5_000;
+export const COMMENT_MAX_LENGTH = 500;
 
 export type PostInput = {
   title: string;
@@ -13,6 +15,18 @@ export type PostValidationResult =
   | {
       ok: true;
       value: PostInput;
+    }
+  | {
+      ok: false;
+      message: string;
+    };
+
+export type CommentValidationResult =
+  | {
+      ok: true;
+      value: {
+        content: string;
+      };
     }
   | {
       ok: false;
@@ -68,6 +82,35 @@ export function validatePostInput(
   };
 }
 
+export function validateCommentInput(
+  input: unknown,
+): CommentValidationResult {
+  if (!input || typeof input !== "object") {
+    return {
+      ok: false,
+      message: "요청 형식이 올바르지 않습니다.",
+    };
+  }
+
+  const body = input as Record<string, unknown>;
+  const content =
+    typeof body.content === "string" ? body.content.trim() : "";
+
+  if (!content || content.length > COMMENT_MAX_LENGTH) {
+    return {
+      ok: false,
+      message: `댓글은 1자 이상 ${COMMENT_MAX_LENGTH}자 이하로 입력해 주세요.`,
+    };
+  }
+
+  return {
+    ok: true,
+    value: {
+      content,
+    },
+  };
+}
+
 export function canEditPost(
   userId: string | number,
   authorId: string,
@@ -81,4 +124,19 @@ export function canDeletePost(
   authorId: string,
 ): boolean {
   return role === "admin" || canEditPost(userId, authorId);
+}
+
+export function canEditComment(
+  userId: string | number,
+  authorId: string,
+): boolean {
+  return String(userId) === authorId;
+}
+
+export function canDeleteComment(
+  userId: string | number,
+  role: string,
+  authorId: string,
+): boolean {
+  return role === "admin" || canEditComment(userId, authorId);
 }

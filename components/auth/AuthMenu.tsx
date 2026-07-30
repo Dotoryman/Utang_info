@@ -93,6 +93,7 @@ export function AuthMenu() {
         <UserMenu
           name={user.nickname}
           avatarUrl={user.profileImage}
+          role={user.role}
           onLogout={handleLogout}
         />
       ) : (

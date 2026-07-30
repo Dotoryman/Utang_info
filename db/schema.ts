@@ -3,6 +3,7 @@ import {
   integer,
   sqliteTable,
   text,
+  uniqueIndex,
 } from "drizzle-orm/sqlite-core";
 
 export const users = sqliteTable("users", {
@@ -12,7 +13,7 @@ export const users = sqliteTable("users", {
 
   passwordHash: text("password_hash").notNull(),
 
-  nickname: text("nickname").notNull().unique(),
+  nickname: text("nickname").notNull(),
 
   profileImage: text("profile_image"),
 
@@ -85,6 +86,10 @@ export const posts = sqliteTable(
       .notNull()
       .default(false),
 
+    viewCount: integer("view_count")
+      .notNull()
+      .default(0),
+
     createdAt: integer("created_at", {
       mode: "timestamp",
     })
@@ -107,6 +112,79 @@ export const posts = sqliteTable(
   ],
 );
 
+export const comments = sqliteTable(
+  "comments",
+  {
+    id: text("id").primaryKey(),
+
+    postId: text("post_id")
+      .notNull()
+      .references(() => posts.id, {
+        onDelete: "cascade",
+      }),
+
+    authorId: text("author_id")
+      .notNull()
+      .references(() => users.id, {
+        onDelete: "cascade",
+      }),
+
+    content: text("content").notNull(),
+
+    createdAt: integer("created_at", {
+      mode: "timestamp",
+    })
+      .notNull()
+      .$defaultFn(() => new Date()),
+
+    updatedAt: integer("updated_at", {
+      mode: "timestamp",
+    })
+      .notNull()
+      .$defaultFn(() => new Date()),
+  },
+  (table) => [
+    index("comments_post_id_created_at_index").on(
+      table.postId,
+      table.createdAt,
+    ),
+    index("comments_author_id_index").on(table.authorId),
+  ],
+);
+
+export const postLikes = sqliteTable(
+  "post_likes",
+  {
+    id: text("id").primaryKey(),
+
+    postId: text("post_id")
+      .notNull()
+      .references(() => posts.id, {
+        onDelete: "cascade",
+      }),
+
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, {
+        onDelete: "cascade",
+      }),
+
+    createdAt: integer("created_at", {
+      mode: "timestamp",
+    })
+      .notNull()
+      .$defaultFn(() => new Date()),
+  },
+  (table) => [
+    uniqueIndex("post_likes_post_user_unique").on(
+      table.postId,
+      table.userId,
+    ),
+    index("post_likes_post_id_index").on(table.postId),
+    index("post_likes_user_id_index").on(table.userId),
+  ],
+);
+
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 
@@ -115,3 +193,9 @@ export type NewSession = typeof sessions.$inferInsert;
 
 export type Post = typeof posts.$inferSelect;
 export type NewPost = typeof posts.$inferInsert;
+
+export type Comment = typeof comments.$inferSelect;
+export type NewComment = typeof comments.$inferInsert;
+
+export type PostLike = typeof postLikes.$inferSelect;
+export type NewPostLike = typeof postLikes.$inferInsert;

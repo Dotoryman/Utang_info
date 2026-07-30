@@ -1,11 +1,11 @@
-import { users } from "../db/schema";
-import { posts } from "../db/schema";
+import { comments, posts, users } from "../db/schema";
 
 export const communityPostSelection = {
   id: posts.id,
   title: posts.title,
   content: posts.content,
   isNotice: posts.isNotice,
+  viewCount: posts.viewCount,
   authorId: posts.authorId,
   authorNickname: users.nickname,
   authorProfileImage: users.profileImage,
@@ -17,6 +17,7 @@ export const communityPostSummarySelection = {
   id: posts.id,
   title: posts.title,
   isNotice: posts.isNotice,
+  viewCount: posts.viewCount,
   authorId: posts.authorId,
   authorNickname: users.nickname,
   authorProfileImage: users.profileImage,
@@ -28,6 +29,7 @@ type CommunityPostSummaryRow = {
   id: string;
   title: string;
   isNotice: boolean;
+  viewCount: number;
   authorId: string;
   authorNickname: string;
   authorProfileImage: string | null;
@@ -51,4 +53,36 @@ export function serializeCommunityPostSummary(
 
 export function serializeCommunityPost(row: CommunityPostRow) {
   return serializeCommunityPostSummary(row);
+}
+
+export const communityCommentSelection = {
+  id: comments.id,
+  postId: comments.postId,
+  authorId: comments.authorId,
+  authorNickname: users.nickname,
+  authorProfileImage: users.profileImage,
+  content: comments.content,
+  createdAt: comments.createdAt,
+  updatedAt: comments.updatedAt,
+};
+
+type CommunityCommentRow = {
+  id: string;
+  postId: string;
+  authorId: string;
+  authorNickname: string;
+  authorProfileImage: string | null;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export function serializeCommunityComment(
+  row: CommunityCommentRow,
+) {
+  return {
+    ...row,
+    createdAt: row.createdAt.toISOString(),
+    updatedAt: row.updatedAt.toISOString(),
+  };
 }

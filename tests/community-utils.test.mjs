@@ -2,9 +2,12 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  canDeleteComment,
   canDeletePost,
+  canEditComment,
   canEditPost,
   parsePage,
+  validateCommentInput,
   validatePostInput,
 } from "../lib/community.ts";
 
@@ -64,4 +67,43 @@ test("allows only authors to edit and authors or admins to delete", () => {
   assert.equal(canDeletePost("user-1", "user", "user-1"), true);
   assert.equal(canDeletePost("user-2", "user", "user-1"), false);
   assert.equal(canDeletePost("admin-1", "admin", "user-1"), true);
+});
+
+test("trims and validates community comments", () => {
+  const result = validateCommentInput({
+    content: "  우땅이 너무 귀여워요!  ",
+  });
+
+  assert.equal(result.ok, true);
+
+  if (result.ok) {
+    assert.deepEqual(result.value, {
+      content: "우땅이 너무 귀여워요!",
+    });
+  }
+
+  assert.equal(validateCommentInput({ content: "" }).ok, false);
+  assert.equal(
+    validateCommentInput({
+      content: "가".repeat(501),
+    }).ok,
+    false,
+  );
+});
+
+test("allows comment authors to edit and authors or admins to delete", () => {
+  assert.equal(canEditComment("user-1", "user-1"), true);
+  assert.equal(canEditComment("user-2", "user-1"), false);
+  assert.equal(
+    canDeleteComment("user-1", "user", "user-1"),
+    true,
+  );
+  assert.equal(
+    canDeleteComment("user-2", "user", "user-1"),
+    false,
+  );
+  assert.equal(
+    canDeleteComment("admin-1", "admin", "user-1"),
+    true,
+  );
 });

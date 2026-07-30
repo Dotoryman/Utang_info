@@ -7,6 +7,7 @@ import styles from "./UserMenu.module.css";
 type UserMenuProps = {
   name: string;
   avatarUrl?: string;
+  role: string;
   onLogout: () => void | Promise<void>;
 };
 
@@ -15,6 +16,7 @@ const defaultAvatarUrl = "/utang-profile.png";
 export function UserMenu({
   name,
   avatarUrl,
+  role,
   onLogout,
 }: UserMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -106,7 +108,11 @@ export function UserMenu({
         >
           <div className={styles.greeting}>
             <strong>{name}</strong>
-            <span>우땅랜드 주민</span>
+            <span>
+              {role === "admin"
+                ? "우땅랜드 관리소장"
+                : "우땅랜드 주민"}
+            </span>
           </div>
 
           <div className={styles.divider} />
@@ -130,6 +136,18 @@ export function UserMenu({
             <span aria-hidden="true">🌳</span>
             우땅 광장
           </Link>
+
+          {role === "admin" && (
+            <Link
+              href="/admin/users"
+              className={styles.menuItem}
+              role="menuitem"
+              onClick={() => setIsOpen(false)}
+            >
+              <span aria-hidden="true">📋</span>
+              주민 관리소
+            </Link>
+          )}
 
           <div className={styles.divider} />
 

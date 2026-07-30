@@ -1,8 +1,13 @@
-import { eq } from "drizzle-orm";
+import { and, count, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 import { getDb } from "../../../../db";
-import { posts, users } from "../../../../db/schema";
+import {
+  comments,
+  postLikes,
+  posts,
+  users,
+} from "../../../../db/schema";
 import { getRequestUser } from "../../../../lib/authSession";
 import {
   canDeletePost,
@@ -33,7 +38,7 @@ async function findPost(id: string) {
 }
 
 export async function GET(
-  _request: Request,
+  request: Request,
   context: PostRouteContext,
 ) {
   const { id } = await context.params;
@@ -49,9 +54,41 @@ export async function GET(
     );
   }
 
+  const viewer = await getRequestUser(request);
+  const db = getDb();
+
+  const [commentCountRows, likeCountRows, viewerLikeRows] =
+    await Promise.all([
+      db
+        .select({ value: count() })
+        .from(comments)
+        .where(eq(comments.postId, id)),
+      db
+        .select({ value: count() })
+        .from(postLikes)
+        .where(eq(postLikes.postId, id)),
+      viewer
+        ? db
+            .select({ id: postLikes.id })
+            .from(postLikes)
+            .where(
+              and(
+                eq(postLikes.postId, id),
+                eq(postLikes.userId, String(viewer.id)),
+              ),
+            )
+            .limit(1)
+        : Promise.resolve([]),
+    ]);
+
   return NextResponse.json({
     ok: true,
-    post: serializeCommunityPost(post),
+    post: {
+      ...serializeCommunityPost(post),
+      commentCount: commentCountRows[0]?.value ?? 0,
+      likeCount: likeCountRows[0]?.value ?? 0,
+      viewerLiked: viewerLikeRows.length > 0,
+    },
   });
 }
 

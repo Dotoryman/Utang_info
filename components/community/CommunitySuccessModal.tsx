@@ -7,6 +7,9 @@ import styles from "./Community.module.css";
 type CommunitySuccessModalProps = {
   isOpen: boolean;
   message: string;
+  description?: string;
+  buttonLabel?: string;
+  buttonIcon?: string;
   onComplete: () => void;
 };
 
@@ -15,6 +18,9 @@ const AUTO_CLOSE_DELAY_MS = 1_500;
 export function CommunitySuccessModal({
   isOpen,
   message,
+  description = "잠시 후 우땅 광장으로 이동해요.",
+  buttonLabel = "광장으로 가기",
+  buttonIcon = "→",
   onComplete,
 }: CommunitySuccessModalProps) {
   const onCompleteRef = useRef(onComplete);
@@ -56,7 +62,7 @@ export function CommunitySuccessModal({
         <p className={styles.successEyebrow}>UTANG SAYS</p>
         <h2 id="community-success-title">{message}</h2>
         <p id="community-success-description">
-          잠시 후 우땅 광장으로 이동해요.
+          {description}
         </p>
 
         <button
@@ -64,8 +70,10 @@ export function CommunitySuccessModal({
           className={styles.successButton}
           onClick={() => onCompleteRef.current()}
         >
-          광장으로 가기
-          <span aria-hidden="true">→</span>
+          {buttonLabel}
+          {buttonIcon && (
+            <span aria-hidden="true">{buttonIcon}</span>
+          )}
         </button>
 
         <span className={styles.successProgress} aria-hidden="true" />

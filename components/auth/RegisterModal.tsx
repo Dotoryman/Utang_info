@@ -259,6 +259,10 @@ export function RegisterModal({
               disabled={isSubmitting}
               required
             />
+
+            <small className={styles.fieldHint}>
+              다른 주민과 같은 닉네임도 사용할 수 있어요.
+            </small>
           </label>
 
           <label className={styles.field}>

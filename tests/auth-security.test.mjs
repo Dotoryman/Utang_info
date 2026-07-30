@@ -15,6 +15,10 @@ import {
   generateSessionToken,
   hashSessionToken,
 } from "../lib/session.ts";
+import {
+  canViewAdminUsers,
+  parseAdminPage,
+} from "../lib/admin.ts";
 
 test("normalizes and validates email addresses", () => {
   assert.equal(normalizeEmail("  USER@Example.COM "), "user@example.com");
@@ -65,4 +69,18 @@ test("creates random session tokens with deterministic hashes", async () => {
     await hashSessionToken(firstToken),
     await hashSessionToken(secondToken),
   );
+});
+
+test("allows only admins to view the resident directory", () => {
+  assert.equal(canViewAdminUsers("admin"), true);
+  assert.equal(canViewAdminUsers("user"), false);
+  assert.equal(canViewAdminUsers(""), false);
+});
+
+test("normalizes invalid admin list pages", () => {
+  assert.equal(parseAdminPage(null), 1);
+  assert.equal(parseAdminPage("0"), 1);
+  assert.equal(parseAdminPage("-1"), 1);
+  assert.equal(parseAdminPage("invalid"), 1);
+  assert.equal(parseAdminPage("3"), 3);
 });

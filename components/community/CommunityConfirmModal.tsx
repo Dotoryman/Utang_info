@@ -7,6 +7,14 @@ import styles from "./Community.module.css";
 type CommunityConfirmModalProps = {
   isOpen: boolean;
   isProcessing?: boolean;
+  eyebrow?: string;
+  icon?: string;
+  title?: string;
+  description?: string;
+  cancelLabel?: string;
+  confirmLabel?: string;
+  processingLabel?: string;
+  confirmTone?: "danger" | "primary";
   onCancel: () => void;
   onConfirm: () => void | Promise<void>;
 };
@@ -14,6 +22,14 @@ type CommunityConfirmModalProps = {
 export function CommunityConfirmModal({
   isOpen,
   isProcessing = false,
+  eyebrow = "WAIT A MOMENT",
+  icon = "🍂",
+  title = "이 이야기를 정말 삭제할까요?",
+  description = "삭제한 이야기는 다시 되돌릴 수 없어요.",
+  cancelLabel = "조금 더 생각하기",
+  confirmLabel = "삭제하기",
+  processingLabel = "삭제하는 중...",
+  confirmTone = "danger",
   onCancel,
   onConfirm,
 }: CommunityConfirmModalProps) {
@@ -63,14 +79,14 @@ export function CommunityConfirmModal({
         aria-describedby="community-confirm-description"
       >
         <span className={styles.confirmIcon} aria-hidden="true">
-          🍂
+          {icon}
         </span>
-        <p className={styles.successEyebrow}>WAIT A MOMENT</p>
+        <p className={styles.successEyebrow}>{eyebrow}</p>
         <h2 id="community-confirm-title">
-          이 이야기를 정말 삭제할까요?
+          {title}
         </h2>
         <p id="community-confirm-description">
-          삭제한 이야기는 다시 되돌릴 수 없어요.
+          {description}
         </p>
 
         <div className={styles.confirmActions}>
@@ -81,15 +97,19 @@ export function CommunityConfirmModal({
             onClick={onCancel}
             disabled={isProcessing}
           >
-            조금 더 생각하기
+            {cancelLabel}
           </button>
           <button
             type="button"
-            className={styles.confirmDelete}
+            className={
+              confirmTone === "primary"
+                ? styles.confirmPrimary
+                : styles.confirmDelete
+            }
             onClick={onConfirm}
             disabled={isProcessing}
           >
-            {isProcessing ? "삭제하는 중..." : "삭제하기"}
+            {isProcessing ? processingLabel : confirmLabel}
           </button>
         </div>
       </section>

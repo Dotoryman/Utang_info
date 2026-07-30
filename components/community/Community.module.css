@@ -320,6 +320,80 @@
   white-space: pre-wrap;
 }
 
+.interactionBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 20px 0;
+  border-top: 1px solid rgb(75 44 35 / 20%);
+}
+
+.likeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 0 18px;
+  border: 2px solid var(--brown);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--brown);
+  font: inherit;
+  font-size: .88rem;
+  font-weight: 850;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--yellow);
+  transition:
+    transform .18s ease,
+    background-color .18s ease,
+    box-shadow .18s ease;
+}
+
+.likeButton:hover:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--yellow);
+}
+
+.likeButtonActive {
+  background: #fff4c7;
+}
+
+.likeButton:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 3px;
+}
+
+.likeButton:disabled {
+  cursor: wait;
+  opacity: .65;
+}
+
+.likeButton strong {
+  min-width: 24px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--brown);
+  color: #fff;
+  font-size: .72rem;
+}
+
+.interactionStats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--brown-soft);
+  font-size: .84rem;
+  font-weight: 750;
+}
+
+.interactionStats > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .articleActions,
 .editorActions {
   display: flex;
@@ -327,6 +401,285 @@
   gap: 12px;
   padding-top: 24px;
   border-top: 1px solid rgb(75 44 35 / 20%);
+}
+
+.commentSection {
+  margin-top: 34px;
+  padding: 34px;
+  border: 3px solid var(--brown);
+  border-radius: 32px 27px 34px 29px;
+  background: var(--paper);
+  box-shadow: 8px 9px 0 rgb(75 44 35 / 14%);
+}
+
+.commentHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.commentEyebrow {
+  margin: 0 0 5px;
+  color: var(--caramel);
+  font-size: .68rem;
+  font-weight: 950;
+  letter-spacing: .16em;
+}
+
+.commentHeading h2 {
+  margin: 0;
+  color: var(--brown);
+  font-size: 1.55rem;
+  letter-spacing: -.04em;
+}
+
+.commentHeading h2 span {
+  color: var(--caramel);
+}
+
+.commentHeadingIcon {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  border: 2px solid var(--brown);
+  border-radius: 50%;
+  background: var(--yellow);
+  font-size: 1.35rem;
+  transform: rotate(5deg);
+}
+
+.commentForm {
+  padding: 20px;
+  border: 2px solid rgb(75 44 35 / 38%);
+  border-radius: 20px;
+  background: #fffdf7;
+}
+
+.commentForm label {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--brown);
+  font-size: .86rem;
+  font-weight: 850;
+}
+
+.commentForm textarea,
+.commentEdit textarea {
+  width: 100%;
+  border: 2px solid rgb(75 44 35 / 34%);
+  border-radius: 14px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  line-height: 1.65;
+  outline: none;
+  resize: vertical;
+}
+
+.commentForm textarea {
+  min-height: 110px;
+  padding: 13px 14px;
+}
+
+.commentForm textarea:focus,
+.commentEdit textarea:focus {
+  border-color: var(--brown);
+  box-shadow: 0 0 0 4px rgb(241 201 80 / 28%);
+}
+
+.commentFormFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.commentFormFooter > span {
+  color: var(--brown-soft);
+  font-size: .72rem;
+}
+
+.commentSubmit {
+  min-height: 42px;
+  padding: 0 17px;
+  border: 2px solid var(--brown);
+  border-radius: 999px;
+  background: var(--brown);
+  color: #fff;
+  font: inherit;
+  font-size: .84rem;
+  font-weight: 850;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--yellow);
+}
+
+.commentSubmit:hover:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--yellow);
+}
+
+.commentSubmit:disabled {
+  cursor: not-allowed;
+  opacity: .55;
+}
+
+.commentLoginPrompt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 17px 19px;
+  border: 2px dashed rgb(75 44 35 / 38%);
+  border-radius: 18px;
+  background: #fff7e5;
+}
+
+.commentLoginPrompt > span {
+  font-size: 1.35rem;
+}
+
+.commentLoginPrompt p {
+  flex: 1;
+  margin: 0;
+  color: var(--brown-soft);
+  font-size: .86rem;
+}
+
+.commentLoginPrompt a {
+  color: var(--brown);
+  font-size: .82rem;
+  font-weight: 900;
+  border-bottom: 2px solid var(--brown);
+}
+
+.commentState {
+  padding: 42px 20px 18px;
+  color: var(--brown-soft);
+  font-size: .9rem;
+  text-align: center;
+}
+
+.commentState span {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 1.8rem;
+}
+
+.commentList {
+  margin: 26px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.commentItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 22px 2px;
+  border-top: 1px dashed rgb(75 44 35 / 28%);
+}
+
+.commentBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.commentMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px 12px;
+  color: var(--brown-soft);
+  font-size: .75rem;
+}
+
+.commentMeta strong {
+  color: var(--brown);
+  font-size: .86rem;
+}
+
+.commentContent {
+  margin: 10px 0 0;
+  color: var(--ink);
+  font-size: .92rem;
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
+
+.commentActions {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.commentActions button,
+.commentEditActions button {
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  background: transparent;
+  color: var(--brown-soft);
+  font: inherit;
+  font-size: .74rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.commentActions button:hover,
+.commentEditActions button:hover:not(:disabled) {
+  border-bottom-color: currentColor;
+  color: var(--brown);
+}
+
+.commentEdit {
+  margin-top: 11px;
+}
+
+.commentEdit textarea {
+  min-height: 96px;
+  padding: 11px 12px;
+  font-size: .88rem;
+}
+
+.commentEditActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.commentEditActions button:disabled {
+  cursor: wait;
+  opacity: .5;
+}
+
+.commentMore {
+  display: block;
+  min-height: 44px;
+  margin: 24px auto 0;
+  padding: 0 20px;
+  border: 2px solid var(--brown);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--brown);
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 850;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--yellow);
+}
+
+.commentMore:hover:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--yellow);
+}
+
+.commentMore:disabled {
+  cursor: wait;
+  opacity: .6;
 }
 
 .editor {
@@ -488,7 +841,8 @@
 }
 
 .confirmCancel,
-.confirmDelete {
+.confirmDelete,
+.confirmPrimary {
   min-height: 45px;
   padding: 0 17px;
   border: 2px solid var(--brown);
@@ -511,14 +865,22 @@
   box-shadow: 3px 3px 0 var(--peach);
 }
 
+.confirmPrimary {
+  background: var(--brown);
+  color: #fff;
+  box-shadow: 3px 3px 0 var(--yellow);
+}
+
 .confirmCancel:focus-visible,
-.confirmDelete:focus-visible {
+.confirmDelete:focus-visible,
+.confirmPrimary:focus-visible {
   outline: 3px solid var(--yellow);
   outline-offset: 3px;
 }
 
 .confirmCancel:disabled,
-.confirmDelete:disabled {
+.confirmDelete:disabled,
+.confirmPrimary:disabled {
   cursor: wait;
   opacity: .6;
 }
@@ -722,6 +1084,19 @@
     min-height: 220px;
   }
 
+  .interactionBar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .likeButton {
+    width: 100%;
+  }
+
+  .interactionStats {
+    justify-content: center;
+  }
+
   .articleActions,
   .editorActions {
     flex-wrap: wrap;
@@ -735,6 +1110,27 @@
   .field textarea {
     min-height: 300px;
   }
+
+  .commentSection {
+    padding: 25px 20px;
+  }
+
+  .commentLoginPrompt {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .commentLoginPrompt p {
+    flex-basis: calc(100% - 46px);
+  }
+
+  .commentLoginPrompt a {
+    margin-left: 46px;
+  }
+
+  .commentItem {
+    gap: 12px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -742,7 +1138,10 @@
   .writeButton,
   .secondaryButton,
   .dangerButton,
-  .postLink {
+  .postLink,
+  .likeButton,
+  .commentSubmit,
+  .commentMore {
     transition: none;
   }
 
