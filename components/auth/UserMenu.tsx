@@ -19,15 +19,9 @@ export function UserMenu({
 }: UserMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [imageSrc, setImageSrc] = useState(
-    avatarUrl?.trim() || defaultAvatarUrl,
-  );
+  const normalizedAvatarUrl = avatarUrl?.trim() || defaultAvatarUrl;
 
   const menuRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setImageSrc(avatarUrl?.trim() || defaultAvatarUrl);
-  }, [avatarUrl]);
 
   useEffect(() => {
     function handleOutsideClick(event: MouseEvent) {
@@ -66,12 +60,6 @@ export function UserMenu({
     }
   }
 
-  function handleImageError() {
-    if (imageSrc !== defaultAvatarUrl) {
-      setImageSrc(defaultAvatarUrl);
-    }
-  }
-
   return (
     <div
       className={styles.wrapper}
@@ -86,12 +74,15 @@ export function UserMenu({
         aria-label={`${name} 사용자 메뉴`}
       >
         <img
-          src={imageSrc}
+          key={normalizedAvatarUrl}
+          src={normalizedAvatarUrl}
           alt=""
           width={38}
           height={38}
           className={styles.avatar}
-          onError={handleImageError}
+          onError={(event) => {
+            event.currentTarget.src = defaultAvatarUrl;
+          }}
         />
 
         <span className={styles.userName}>

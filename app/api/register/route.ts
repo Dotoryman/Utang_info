@@ -3,6 +3,11 @@ import { NextResponse } from "next/server";
 
 import { getDb } from "../../../db";
 import { users } from "../../../db/schema";
+import {
+  isUniqueConstraintError,
+  isValidEmail,
+  normalizeEmail,
+} from "../../../lib/auth";
 import { hashPassword } from "../../../lib/password";
 
 type RegisterBody = {
@@ -10,14 +15,6 @@ type RegisterBody = {
   password?: unknown;
   nickname?: unknown;
 };
-
-function normalizeEmail(value: string): string {
-  return value.trim().toLowerCase();
-}
-
-function isValidEmail(value: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-}
 
 export async function POST(request: Request) {
   let body: RegisterBody;
@@ -119,6 +116,16 @@ export async function POST(request: Request) {
       updatedAt: now,
     });
   } catch (error) {
+    if (isUniqueConstraintError(error)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "이미 사용 중인 이메일 또는 닉네임입니다.",
+        },
+        { status: 409 },
+      );
+    }
+
     console.error("Failed to create user:", error);
 
     return NextResponse.json(

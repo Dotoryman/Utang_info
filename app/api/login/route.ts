@@ -1,8 +1,9 @@
-import { eq } from "drizzle-orm";
+import { eq, lte } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 import { getDb } from "../../../db";
 import { sessions, users } from "../../../db/schema";
+import { normalizeEmail } from "../../../lib/auth";
 import { verifyPassword } from "../../../lib/password";
 import {
   generateSessionToken,
@@ -16,10 +17,6 @@ type LoginBody = {
   email?: unknown;
   password?: unknown;
 };
-
-function normalizeEmail(value: string): string {
-  return value.trim().toLowerCase();
-}
 
 export async function POST(request: Request) {
   let body: LoginBody;
@@ -57,6 +54,9 @@ export async function POST(request: Request) {
   }
 
   const db = getDb();
+  const now = new Date();
+
+  await db.delete(sessions).where(lte(sessions.expiresAt, now));
 
   const user = await db.query.users.findFirst({
     where: eq(users.email, email),
@@ -89,14 +89,14 @@ export async function POST(request: Request) {
 
   const sessionToken = generateSessionToken();
   const tokenHash = await hashSessionToken(sessionToken);
-  const expiresAt = new Date(Date.now() + SESSION_DURATION_MS);
+  const expiresAt = new Date(now.getTime() + SESSION_DURATION_MS);
 
   await db.insert(sessions).values({
     id: crypto.randomUUID(),
     userId: user.id,
     tokenHash,
     expiresAt,
-    createdAt: new Date(),
+    createdAt: now,
   });
 
   const response = NextResponse.json({

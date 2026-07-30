@@ -3,29 +3,11 @@ import { NextResponse } from "next/server";
 
 import { getDb } from "../../../db";
 import { sessions } from "../../../db/schema";
+import { getCookieValue } from "../../../lib/auth";
 import {
   hashSessionToken,
   SESSION_COOKIE_NAME,
 } from "../../../lib/session";
-
-function getCookieValue(
-  cookieHeader: string | null,
-  cookieName: string,
-): string | null {
-  if (!cookieHeader) {
-    return null;
-  }
-
-  for (const cookie of cookieHeader.split(";")) {
-    const [name, ...valueParts] = cookie.trim().split("=");
-
-    if (name === cookieName) {
-      return decodeURIComponent(valueParts.join("="));
-    }
-  }
-
-  return null;
-}
 
 export async function POST(request: Request) {
   const sessionToken = getCookieValue(

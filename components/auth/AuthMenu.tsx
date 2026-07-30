@@ -1,61 +1,62 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { LoginModal } from "./LoginModal";
 import { RegisterModal } from "./RegisterModal";
 import { UserMenu } from "./UserMenu";
-
-type User = {
-  id: string;
-  email: string;
-  nickname: string;
-  profileImage: string | null;
-  role: string;
-};
-
-type MeResponse = {
-  authenticated: boolean;
-  user: User | null;
-};
+import type { AuthUser, MeResponse } from "./authTypes";
 
 type AuthModal = "login" | "register" | null;
 
 export function AuthMenu() {
   const [authModal, setAuthModal] = useState<AuthModal>(null);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [registeredEmail, setRegisteredEmail] = useState("");
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
-  const loadCurrentUser = useCallback(async () => {
-    try {
-      const response = await fetch("/api/me", {
-        credentials: "include",
-        cache: "no-store",
-      });
-
-      if (response.status === 401) {
-        setUser(null);
-        return;
-      }
-
-      if (!response.ok) {
-        throw new Error();
-      }
-
-      const data = (await response.json()) as MeResponse;
-
-      setUser(data.authenticated ? data.user : null);
-    } catch {
-      setUser(null);
-    } finally {
-      setIsCheckingAuth(false);
-    }
-  }, []);
-
   useEffect(() => {
-    loadCurrentUser();
-  }, [loadCurrentUser]);
+    let isActive = true;
+
+    async function loadCurrentUser() {
+      try {
+        const response = await fetch("/api/me", {
+          credentials: "include",
+          cache: "no-store",
+        });
+
+        if (!isActive) {
+          return;
+        }
+
+        if (response.status === 401) {
+          setUser(null);
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error();
+        }
+
+        const data = (await response.json()) as MeResponse;
+        setUser(data.authenticated ? data.user : null);
+      } catch {
+        if (isActive) {
+          setUser(null);
+        }
+      } finally {
+        if (isActive) {
+          setIsCheckingAuth(false);
+        }
+      }
+    }
+
+    void loadCurrentUser();
+
+    return () => {
+      isActive = false;
+    };
+  }, []);
 
   async function handleLogout() {
     const response = await fetch("/api/logout", {
@@ -72,7 +73,7 @@ export function AuthMenu() {
     setRegisteredEmail("");
   }
 
-  function handleLoginSuccess(loginUser: User) {
+  function handleLoginSuccess(loginUser: AuthUser) {
     setUser(loginUser);
     setAuthModal(null);
   }
@@ -91,29 +92,26 @@ export function AuthMenu() {
       {user ? (
         <UserMenu
           name={user.nickname}
-          avatarUrl={
-            user.profileImage?.trim() ||
-            "/utang-profile.png"
-          }
+          avatarUrl={user.profileImage}
           onLogout={handleLogout}
         />
       ) : (
         <>
-            <button
+          <button
             type="button"
             className="nav-auth-button"
             onClick={() => setAuthModal("register")}
-            >
+          >
             주민등록
-            </button>
+          </button>
 
-            <button
+          <button
             type="button"
             className="nav-auth-button"
             onClick={() => setAuthModal("login")}
-            >
+          >
             입장하기
-            </button>
+          </button>
         </>
       )}
 

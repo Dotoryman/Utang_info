@@ -3,29 +3,11 @@ import { NextResponse } from "next/server";
 
 import { getDb } from "../../../db";
 import { sessions, users } from "../../../db/schema";
+import { getCookieValue } from "../../../lib/auth";
 import {
   hashSessionToken,
   SESSION_COOKIE_NAME,
 } from "../../../lib/session";
-
-function getCookieValue(
-  cookieHeader: string | null,
-  cookieName: string,
-): string | null {
-  if (!cookieHeader) {
-    return null;
-  }
-
-  for (const cookie of cookieHeader.split(";")) {
-    const [name, ...valueParts] = cookie.trim().split("=");
-
-    if (name === cookieName) {
-      return decodeURIComponent(valueParts.join("="));
-    }
-  }
-
-  return null;
-}
 
 export async function GET(request: Request) {
   const sessionToken = getCookieValue(
@@ -69,13 +51,29 @@ export async function GET(request: Request) {
   const login = result[0];
 
   if (!login) {
-    return NextResponse.json(
+    await db
+      .delete(sessions)
+      .where(eq(sessions.tokenHash, tokenHash));
+
+    const response = NextResponse.json(
       {
         authenticated: false,
         user: null,
       },
       { status: 401 },
     );
+
+    response.cookies.set({
+      name: SESSION_COOKIE_NAME,
+      value: "",
+      httpOnly: true,
+      secure: new URL(request.url).protocol === "https:",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 0,
+    });
+
+    return response;
   }
 
   return NextResponse.json({

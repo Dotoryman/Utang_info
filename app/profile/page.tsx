@@ -1,25 +1,15 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import type {
+  AuthUser,
+  MeResponse,
+} from "@/components/auth/authTypes";
 import styles from "./Profile.module.css";
 
-type User = {
-  id: number | string;
-  email: string;
-  nickname: string;
-  profileImage: string | null;
-  role: string;
-};
-
-type MeResponse = {
-  authenticated: boolean;
-  user: User | null;
-};
-
 export default function ProfilePage() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -64,7 +54,7 @@ export default function ProfilePage() {
       }
     }
 
-    loadProfile();
+    void loadProfile();
   }, []);
 
   if (isLoading) {
@@ -122,9 +112,9 @@ export default function ProfilePage() {
   }
 
   const residentNumber = String(user.id)
-  .replaceAll("-", "")
-  .slice(0, 8)
-  .toUpperCase();
+    .replaceAll("-", "")
+    .slice(0, 8)
+    .toUpperCase();
 
   const profileImage =
     user.profileImage?.trim() || "/utang-profile.png";
@@ -174,7 +164,7 @@ export default function ProfilePage() {
                 width={150}
                 height={150}
                 className={styles.avatar}
-/>
+              />
             </div>
 
             <dl className={styles.information}>

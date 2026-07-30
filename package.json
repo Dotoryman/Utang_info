@@ -1,6 +1,6 @@
 {
   "name": "utang-info",
-  "version": "0.1.0",
+  "version": "0.4.0",
   "private": true,
   "engines": {
     "node": ">=22.13.0"
@@ -10,8 +10,10 @@
     "build": "vinext build",
     "build:static": "vite build --config vite.static.config.ts",
     "start": "vinext start",
-    "test": "npm run build && node --test tests/rendered-html.test.mjs",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "test:unit": "node --experimental-strip-types --test tests/fortune-utils.test.mjs tests/auth-security.test.mjs",
+    "test": "npm run build && npm run test:unit",
+    "lint": "eslint . --max-warnings=0",
+    "check": "npm run lint && npm test",
     "db:generate": "drizzle-kit generate",
     "deploy": "npx @vinext/cloudflare deploy",
     "deploy:check": "npx @vinext/cloudflare deploy --dry-run"

@@ -9,27 +9,14 @@ import {
 } from "react";
 
 import styles from "./LoginModal.module.css";
-
-type User = {
-  id: string;
-  email: string;
-  nickname: string;
-  profileImage: string | null;
-  role: string;
-};
+import type { AuthUser, LoginResponse } from "./authTypes";
 
 type LoginModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onOpenRegister: () => void;
-  onLoginSuccess: (user: User) => void | Promise<void>;
+  onLoginSuccess: (user: AuthUser) => void | Promise<void>;
   initialEmail?: string;
-};
-
-type LoginResponse = {
-  ok: boolean;
-  message?: string;
-  user?: User;
 };
 
 export function LoginModal({
@@ -39,6 +26,28 @@ export function LoginModal({
   onLoginSuccess,
   initialEmail = "",
 }: LoginModalProps) {
+  if (!isOpen) {
+    return null;
+  }
+
+  return (
+    <LoginModalContent
+      initialEmail={initialEmail}
+      onClose={onClose}
+      onOpenRegister={onOpenRegister}
+      onLoginSuccess={onLoginSuccess}
+    />
+  );
+}
+
+type LoginModalContentProps = Omit<LoginModalProps, "isOpen">;
+
+function LoginModalContent({
+  onClose,
+  onOpenRegister,
+  onLoginSuccess,
+  initialEmail = "",
+}: LoginModalContentProps) {
   const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -47,14 +56,6 @@ export function LoginModal({
   const emailInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
-
-    setEmail(initialEmail);
-    setPassword("");
-    setMessage("");
-
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
@@ -75,7 +76,7 @@ export function LoginModal({
       window.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = previousOverflow;
     };
-  }, [isOpen, initialEmail, isSubmitting, onClose]);
+  }, [isSubmitting, onClose]);
 
   function closeModal() {
     if (isSubmitting) {
@@ -151,10 +152,6 @@ export function LoginModal({
     } finally {
       setIsSubmitting(false);
     }
-  }
-
-  if (!isOpen) {
-    return null;
   }
 
   return (
