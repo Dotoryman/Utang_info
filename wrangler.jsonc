@@ -19,5 +19,24 @@
       "binding": "PROFILE_IMAGES",
       "bucket_name": "utangland-profile-images"
     }
+  ],
+
+  "ratelimits": [
+    {
+      "name": "LOGIN_RATE_LIMITER",
+      "namespace_id": "9001001",
+      "simple": {
+        "limit": 10,
+        "period": 60
+      }
+    },
+    {
+      "name": "REGISTER_RATE_LIMITER",
+      "namespace_id": "9001002",
+      "simple": {
+        "limit": 5,
+        "period": 60
+      }
+    }
   ]
 }

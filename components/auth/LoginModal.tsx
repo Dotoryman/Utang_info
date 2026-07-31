@@ -3,6 +3,7 @@
 import {
   FormEvent,
   MouseEvent,
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -10,6 +11,7 @@ import {
 
 import styles from "./LoginModal.module.css";
 import type { AuthUser, LoginResponse } from "./authTypes";
+import { TurnstileWidget } from "./TurnstileWidget";
 
 type LoginModalProps = {
   isOpen: boolean;
@@ -52,8 +54,17 @@ function LoginModalContent({
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSecurityReady, setIsSecurityReady] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [securityAttempt, setSecurityAttempt] = useState(0);
 
   const emailInputRef = useRef<HTMLInputElement>(null);
+  const handleSecurityReady = useCallback((ready: boolean) => {
+    setIsSecurityReady(ready);
+  }, []);
+  const handleTurnstileToken = useCallback((token: string | null) => {
+    setTurnstileToken(token);
+  }, []);
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -85,6 +96,7 @@ function LoginModalContent({
 
     setMessage("");
     setPassword("");
+    setTurnstileToken(null);
     onClose();
   }
 
@@ -103,6 +115,7 @@ function LoginModalContent({
 
     setMessage("");
     setPassword("");
+    setTurnstileToken(null);
     onOpenRegister();
   }
 
@@ -131,6 +144,7 @@ function LoginModalContent({
         body: JSON.stringify({
           email: normalizedEmail,
           password,
+          turnstileToken,
         }),
       });
 
@@ -151,6 +165,7 @@ function LoginModalContent({
       );
     } finally {
       setIsSubmitting(false);
+      setSecurityAttempt((current) => current + 1);
     }
   }
 
@@ -252,14 +267,23 @@ function LoginModalContent({
             </p>
           )}
 
+          <TurnstileWidget
+            key={`login-security-${securityAttempt}`}
+            action="login"
+            onReadyChange={handleSecurityReady}
+            onTokenChange={handleTurnstileToken}
+          />
+
           <button
             type="submit"
             className={styles.submitButton}
-            disabled={isSubmitting}
+            disabled={isSubmitting || !isSecurityReady}
           >
-            {isSubmitting
-              ? "입장하는 중..."
-              : "우땅랜드 입장하기"}
+            {!isSecurityReady
+              ? "안전한 입장 준비 중..."
+              : isSubmitting
+                ? "입장하는 중..."
+                : "우땅랜드 입장하기"}
           </button>
         </form>
 

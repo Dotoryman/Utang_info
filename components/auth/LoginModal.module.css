@@ -119,6 +119,14 @@
   box-shadow: 4px 4px 0 #1f1d1a;
 }
 
+.characterMark img {
+  display: block;
+  width: 58px;
+  height: 58px;
+  border-radius: 17px;
+  object-fit: cover;
+}
+
 .eyebrow {
   margin: 28px 0 8px;
   color: #d7572b;
@@ -241,15 +249,25 @@
   color: #71685e;
 }
 
-.registerArea a {
+.registerLink {
   flex-shrink: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
   color: #d7572b;
+  font: inherit;
   font-weight: 900;
-  text-decoration: none;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
-.registerArea a:hover {
-  text-decoration: underline;
+.registerLink:hover:not(:disabled) {
+  color: #9e3514;
+}
+
+.registerLink:disabled {
+  cursor: wait;
+  opacity: 0.6;
 }
 
 @keyframes overlayIn {
@@ -348,44 +366,6 @@
     flex-direction: column;
     gap: 7px;
   }
-  .registerLink {
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: #7b5a45;
-  font: inherit;
-  font-weight: 900;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.registerLink:hover {
-  color: #5e4535;
-}
-
-.registerLink:disabled {
-  cursor: wait;
-  opacity: 0.6;
-}
-.characterMark {
-  display: grid;
-  width: 96px;
-  height: 96px;
-  place-items: center;
-  overflow: hidden;
-  margin: 0 auto 18px;
-  border: 2px solid #f5e6d3;
-  border-radius: 28px;
-  background: #fff8f1;
-}
-
-.characterMark img {
-  display: block;
-  width: 88px;
-  height: 88px;
-  border-radius: 23px;
-  object-fit: cover;
-}
 }
 
 @keyframes sheetIn {

@@ -1,0 +1,32 @@
+.container {
+  display: grid;
+  min-height: 34px;
+  place-items: center;
+}
+
+.widget {
+  width: 100%;
+  min-height: 65px;
+}
+
+.status {
+  margin: 0;
+  color: #71685e;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.error {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid rgb(163 79 79 / 18%);
+  border-radius: 12px;
+  background: rgb(247 197 197 / 24%);
+  color: #a34f4f;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+}

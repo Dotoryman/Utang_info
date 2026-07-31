@@ -1,0 +1,56 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+  background: rgb(27 24 21 / 58%);
+  backdrop-filter: blur(6px);
+}
+
+.modal {
+  width: min(390px, 100%);
+  padding: 32px 28px 28px;
+  border: 3px solid #4b2c23;
+  border-radius: 28px;
+  background: #fffaf0;
+  color: #2c1d19;
+  text-align: center;
+  box-shadow: 8px 9px 0 #f1c950;
+}
+
+.icon {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 3rem;
+}
+
+.modal h2 {
+  margin: 0;
+  font-size: 1.45rem;
+}
+
+.modal p {
+  margin: 13px 0 23px;
+  color: #725044;
+  line-height: 1.65;
+}
+
+.button {
+  min-width: 150px;
+  min-height: 48px;
+  border: 2px solid #4b2c23;
+  border-radius: 999px;
+  background: #4b2c23;
+  color: #fff;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 #f1c950;
+}
+
+.button:focus-visible {
+  outline: 3px solid #f1c950;
+  outline-offset: 4px;
+}

@@ -252,22 +252,6 @@ export default function Home() {
         </div>
       </section>
 
-      <footer>
-        <a className="brand footer-brand" href="#top">
-          <span aria-hidden="true">●ᴥ●</span>
-          UTANG
-        </a>
-
-        <p>작고 엉뚱하고 다정한 친구, 우땅이</p>
-
-        <a
-          href={instagramUrl}
-          target="_blank"
-          rel="noreferrer"
-        >
-          Instagram ↗
-        </a>
-      </footer>
     </main>
   );
 }

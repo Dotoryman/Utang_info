@@ -1,3 +1,4 @@
+import { env } from "cloudflare:workers";
 import { eq, lte } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
@@ -12,10 +13,21 @@ import {
   SESSION_DURATION_MS,
   SESSION_DURATION_SECONDS,
 } from "../../../lib/session";
+import {
+  AUTH_RATE_LIMIT_MESSAGE,
+  isAuthRequestAllowed,
+  type RateLimiterBinding,
+  validateTurnstileToken,
+} from "../../../lib/security";
 
 type LoginBody = {
   email?: unknown;
   password?: unknown;
+  turnstileToken?: unknown;
+};
+
+type AuthEnvironment = typeof env & {
+  LOGIN_RATE_LIMITER?: RateLimiterBinding;
 };
 
 export async function POST(request: Request) {
@@ -50,6 +62,45 @@ export async function POST(request: Request) {
         message: "이메일과 비밀번호를 입력해 주세요.",
       },
       { status: 400 },
+    );
+  }
+
+  const authEnvironment = env as AuthEnvironment;
+  const requestAllowed = await isAuthRequestAllowed(
+    authEnvironment.LOGIN_RATE_LIMITER,
+    "login",
+    email,
+  );
+
+  if (!requestAllowed) {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: AUTH_RATE_LIMIT_MESSAGE,
+      },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": "60",
+        },
+      },
+    );
+  }
+
+  const turnstileResult = await validateTurnstileToken(
+    request,
+    authEnvironment,
+    body.turnstileToken,
+    "login",
+  );
+
+  if (!turnstileResult.ok) {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: turnstileResult.message,
+      },
+      { status: turnstileResult.status },
     );
   }
 

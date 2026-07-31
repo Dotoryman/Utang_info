@@ -1,3 +1,4 @@
+import { env } from "cloudflare:workers";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
@@ -9,11 +10,22 @@ import {
   normalizeEmail,
 } from "../../../lib/auth";
 import { hashPassword } from "../../../lib/password";
+import {
+  AUTH_RATE_LIMIT_MESSAGE,
+  isAuthRequestAllowed,
+  type RateLimiterBinding,
+  validateTurnstileToken,
+} from "../../../lib/security";
 
 type RegisterBody = {
   email?: unknown;
   password?: unknown;
   nickname?: unknown;
+  turnstileToken?: unknown;
+};
+
+type AuthEnvironment = typeof env & {
+  REGISTER_RATE_LIMITER?: RateLimiterBinding;
 };
 
 export async function POST(request: Request) {
@@ -65,6 +77,45 @@ export async function POST(request: Request) {
         message: "닉네임은 2자 이상 20자 이하로 입력해 주세요.",
       },
       { status: 400 },
+    );
+  }
+
+  const authEnvironment = env as AuthEnvironment;
+  const requestAllowed = await isAuthRequestAllowed(
+    authEnvironment.REGISTER_RATE_LIMITER,
+    "register",
+    email,
+  );
+
+  if (!requestAllowed) {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: AUTH_RATE_LIMIT_MESSAGE,
+      },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": "60",
+        },
+      },
+    );
+  }
+
+  const turnstileResult = await validateTurnstileToken(
+    request,
+    authEnvironment,
+    body.turnstileToken,
+    "register",
+  );
+
+  if (!turnstileResult.ok) {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: turnstileResult.message,
+      },
+      { status: turnstileResult.status },
     );
   }
 

@@ -1,0 +1,97 @@
+.page {
+  display: grid;
+  min-height: 72vh;
+  place-items: center;
+  padding: 70px 24px;
+  background:
+    radial-gradient(circle at 20% 18%, rgb(228 173 142 / 35%), transparent 26%),
+    #f8f0df;
+  color: #2c1d19;
+  text-align: center;
+}
+
+.card {
+  width: min(560px, 100%);
+  padding: 48px 38px;
+  border: 3px solid #4b2c23;
+  border-radius: 32px;
+  background: #fffaf0;
+  box-shadow: 9px 10px 0 #f1c950;
+}
+
+.icon {
+  display: block;
+  margin-bottom: 18px;
+  font-size: 4rem;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: #c98664;
+  font-size: 0.75rem;
+  font-weight: 950;
+  letter-spacing: 0.14em;
+}
+
+.card h1 {
+  margin: 0;
+  font-size: clamp(2rem, 7vw, 3.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.055em;
+}
+
+.description {
+  margin: 20px auto 0;
+  color: #725044;
+  line-height: 1.75;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 30px;
+}
+
+.primary,
+.secondary {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 22px;
+  border: 2px solid #4b2c23;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.primary {
+  background: #4b2c23;
+  color: #fff;
+  box-shadow: 4px 4px 0 #f1c950;
+}
+
+.secondary {
+  background: #fffaf0;
+  color: #4b2c23;
+}
+
+.primary:focus-visible,
+.secondary:focus-visible {
+  outline: 3px solid #f1c950;
+  outline-offset: 4px;
+}
+
+@media (max-width: 520px) {
+  .card {
+    padding: 38px 22px;
+    border-radius: 26px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+}

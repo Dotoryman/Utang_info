@@ -1,0 +1,5 @@
+# Cloudflare Turnstile test keys for local development only.
+# Copy this file to .dev.vars. Never use these test keys in production.
+TURNSTILE_SITE_KEY=1x00000000000000000000AA
+TURNSTILE_SECRET=1x0000000000000000000000000000000AA
+TURNSTILE_HOSTNAMES=localhost,127.0.0.1

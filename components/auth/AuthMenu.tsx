@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { LoginModal } from "./LoginModal";
 import { RegisterModal } from "./RegisterModal";
+import { AuthStatusModal } from "./AuthStatusModal";
 import { UserMenu } from "./UserMenu";
 import type { AuthUser, MeResponse } from "./authTypes";
 
@@ -15,6 +16,7 @@ export function AuthMenu() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [registeredEmail, setRegisteredEmail] = useState("");
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [hasLogoutError, setHasLogoutError] = useState(false);
 
   useEffect(() => {
     let isActive = true;
@@ -87,7 +89,7 @@ export function AuthMenu() {
     });
 
     if (!response.ok) {
-      alert("로그아웃에 실패했습니다.");
+      setHasLogoutError(true);
       return;
     }
 
@@ -164,6 +166,11 @@ export function AuthMenu() {
         onClose={() => setAuthModal(null)}
         onOpenLogin={() => setAuthModal("login")}
         onRegisterSuccess={handleRegisterSuccess}
+      />
+
+      <AuthStatusModal
+        isOpen={hasLogoutError}
+        onClose={() => setHasLogoutError(false)}
       />
     </>
   );

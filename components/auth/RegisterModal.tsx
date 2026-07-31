@@ -3,12 +3,14 @@
 import {
   FormEvent,
   MouseEvent,
+  useCallback,
   useEffect,
   useRef,
   useState,
 } from "react";
 
 import styles from "./RegisterModal.module.css";
+import { TurnstileWidget } from "./TurnstileWidget";
 
 type RegisterModalProps = {
   isOpen: boolean;
@@ -39,8 +41,17 @@ export function RegisterModal({
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSecurityReady, setIsSecurityReady] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [securityAttempt, setSecurityAttempt] = useState(0);
 
   const emailInputRef = useRef<HTMLInputElement>(null);
+  const handleSecurityReady = useCallback((ready: boolean) => {
+    setIsSecurityReady(ready);
+  }, []);
+  const handleTurnstileToken = useCallback((token: string | null) => {
+    setTurnstileToken(token);
+  }, []);
 
   useEffect(() => {
     if (!isOpen) {
@@ -75,6 +86,7 @@ export function RegisterModal({
     setPassword("");
     setPasswordConfirm("");
     setMessage("");
+    setTurnstileToken(null);
   }
 
   function closeModal() {
@@ -148,6 +160,7 @@ export function RegisterModal({
           email: normalizedEmail,
           nickname: normalizedNickname,
           password,
+          turnstileToken,
         }),
       });
 
@@ -169,6 +182,7 @@ export function RegisterModal({
       );
     } finally {
       setIsSubmitting(false);
+      setSecurityAttempt((current) => current + 1);
     }
   }
 
@@ -307,14 +321,23 @@ export function RegisterModal({
             </p>
           )}
 
+          <TurnstileWidget
+            key={`register-security-${securityAttempt}`}
+            action="register"
+            onReadyChange={handleSecurityReady}
+            onTokenChange={handleTurnstileToken}
+          />
+
           <button
             type="submit"
             className={styles.submitButton}
-            disabled={isSubmitting}
+            disabled={isSubmitting || !isSecurityReady}
           >
-            {isSubmitting
-              ? "주민등록 중..."
-              : "우땅 주민 되기"}
+            {!isSecurityReady
+              ? "안전한 등록 준비 중..."
+              : isSubmitting
+                ? "주민등록 중..."
+                : "우땅 주민 되기"}
           </button>
         </form>
 
