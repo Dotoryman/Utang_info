@@ -6,6 +6,7 @@ import {
   canDeletePost,
   canEditComment,
   canEditPost,
+  normalizeCommunitySearch,
   parsePage,
   validateCommentInput,
   validatePostInput,
@@ -17,6 +18,15 @@ test("normalizes invalid pages to the first page", () => {
   assert.equal(parsePage("-2"), 1);
   assert.equal(parsePage("not-a-number"), 1);
   assert.equal(parsePage("3"), 3);
+});
+
+test("normalizes community search text and limits its length", () => {
+  assert.equal(
+    normalizeCommunitySearch("  도토리 이야기  "),
+    "도토리 이야기",
+  );
+  assert.equal(normalizeCommunitySearch(null), "");
+  assert.equal(normalizeCommunitySearch("가".repeat(80)).length, 50);
 });
 
 test("trims and accepts a valid community post", () => {

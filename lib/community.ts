@@ -4,6 +4,7 @@ export const POST_TITLE_MIN_LENGTH = 2;
 export const POST_TITLE_MAX_LENGTH = 80;
 export const POST_CONTENT_MAX_LENGTH = 5_000;
 export const COMMENT_MAX_LENGTH = 500;
+export const COMMUNITY_SEARCH_MAX_LENGTH = 50;
 
 export type PostInput = {
   title: string;
@@ -36,6 +37,12 @@ export type CommentValidationResult =
 export function parsePage(value: string | null): number {
   const page = Number(value);
   return Number.isInteger(page) && page > 0 ? page : 1;
+}
+
+export function normalizeCommunitySearch(
+  value: string | null | undefined,
+): string {
+  return (value ?? "").trim().slice(0, COMMUNITY_SEARCH_MAX_LENGTH);
 }
 
 export function validatePostInput(

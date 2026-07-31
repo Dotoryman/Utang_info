@@ -16,6 +16,7 @@ import {
   hashSessionToken,
 } from "../lib/session.ts";
 import {
+  canDeleteResident,
   canViewAdminUsers,
   parseAdminPage,
 } from "../lib/admin.ts";
@@ -75,6 +76,25 @@ test("allows only admins to view the resident directory", () => {
   assert.equal(canViewAdminUsers("admin"), true);
   assert.equal(canViewAdminUsers("user"), false);
   assert.equal(canViewAdminUsers(""), false);
+});
+
+test("allows admins to delete residents but protects admin accounts", () => {
+  assert.equal(
+    canDeleteResident("admin-1", "admin", "user-1", "user"),
+    true,
+  );
+  assert.equal(
+    canDeleteResident("user-1", "user", "user-2", "user"),
+    false,
+  );
+  assert.equal(
+    canDeleteResident("admin-1", "admin", "admin-2", "admin"),
+    false,
+  );
+  assert.equal(
+    canDeleteResident("admin-1", "admin", "admin-1", "admin"),
+    false,
+  );
 });
 
 test("normalizes invalid admin list pages", () => {

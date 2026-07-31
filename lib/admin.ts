@@ -9,3 +9,16 @@ export function parseAdminPage(value: string | null): number {
 export function canViewAdminUsers(role: string): boolean {
   return role === "admin";
 }
+
+export function canDeleteResident(
+  viewerId: string | number,
+  viewerRole: string,
+  targetId: string,
+  targetRole: string,
+): boolean {
+  return (
+    viewerRole === "admin" &&
+    String(viewerId) !== targetId &&
+    targetRole !== "admin"
+  );
+}

@@ -30,3 +30,13 @@ export type AdminUserListResponse = {
     totalPages: number;
   };
 };
+
+export type AdminUserDeleteResponse = {
+  ok: boolean;
+  message?: string;
+  deletedUser?: {
+    id: string;
+    nickname: string;
+  };
+  imageCleanupPending?: boolean;
+};

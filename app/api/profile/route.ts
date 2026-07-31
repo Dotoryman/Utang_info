@@ -1,10 +1,16 @@
+import { env } from "cloudflare:workers";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 import { getDb } from "../../../db";
 import { users } from "../../../db/schema";
 import { getRequestUser } from "../../../lib/authSession";
-import { validateProfileNickname } from "../../../lib/profile";
+import {
+  getProfileImageObjectKey,
+  validateProfileNickname,
+} from "../../../lib/profile";
+import { verifyPassword } from "../../../lib/password";
+import { SESSION_COOKIE_NAME } from "../../../lib/session";
 
 type ProfileBody = {
   nickname?: unknown;
@@ -67,4 +73,103 @@ export async function PATCH(request: Request) {
       nickname: validation.value,
     },
   });
+}
+
+export async function DELETE(request: Request) {
+  const user = await getRequestUser(request);
+
+  if (!user) {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: "회원 탈퇴를 하려면 먼저 입장해 주세요.",
+      },
+      { status: 401 },
+    );
+  }
+
+  if (user.role === "admin") {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: "관리소장 계정은 회원 탈퇴로 삭제할 수 없어요.",
+      },
+      { status: 403 },
+    );
+  }
+
+  let body: { password?: unknown };
+
+  try {
+    body = (await request.json()) as { password?: unknown };
+  } catch {
+    body = {};
+  }
+
+  const password =
+    typeof body.password === "string" ? body.password : "";
+
+  if (!password) {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: "현재 비밀번호를 입력해 주세요.",
+      },
+      { status: 400 },
+    );
+  }
+
+  const db = getDb();
+  const userRows = await db
+    .select({
+      id: users.id,
+      passwordHash: users.passwordHash,
+      profileImage: users.profileImage,
+    })
+    .from(users)
+    .where(eq(users.id, String(user.id)))
+    .limit(1);
+  const existingUser = userRows[0];
+
+  if (
+    !existingUser ||
+    !(await verifyPassword(password, existingUser.passwordHash))
+  ) {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: "현재 비밀번호가 올바르지 않아요.",
+      },
+      { status: 403 },
+    );
+  }
+
+  await db.delete(users).where(eq(users.id, existingUser.id));
+
+  const objectKey = getProfileImageObjectKey(existingUser.profileImage);
+
+  if (objectKey && env.PROFILE_IMAGES) {
+    try {
+      await env.PROFILE_IMAGES.delete(objectKey);
+    } catch (error) {
+      console.error("Failed to delete withdrawn profile image:", error);
+    }
+  }
+
+  const response = NextResponse.json({
+    ok: true,
+    message: "회원 탈퇴가 완료되었숭.",
+  });
+
+  response.cookies.set({
+    name: SESSION_COOKIE_NAME,
+    value: "",
+    httpOnly: true,
+    secure: new URL(request.url).protocol === "https:",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 0,
+  });
+
+  return response;
 }

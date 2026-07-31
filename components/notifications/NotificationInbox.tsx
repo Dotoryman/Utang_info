@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { CommunityConfirmModal } from "../community/CommunityConfirmModal";
 import styles from "./NotificationInbox.module.css";
 import type {
   NotificationItem,
@@ -23,6 +24,9 @@ export function NotificationInbox() {
   const [data, setData] = useState<NotificationResponse | null>(null);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [reloadVersion, setReloadVersion] = useState(0);
+  const [isCleanupOpen, setIsCleanupOpen] = useState(false);
+  const [isCleaning, setIsCleaning] = useState(false);
 
   useEffect(() => {
     let isActive = true;
@@ -70,7 +74,7 @@ export function NotificationInbox() {
     return () => {
       isActive = false;
     };
-  }, [page]);
+  }, [page, reloadVersion]);
 
   async function markRead(id: string) {
     const response = await fetch("/api/notifications", {
@@ -127,6 +131,31 @@ export function NotificationInbox() {
     );
   }
 
+  async function cleanupReadNotifications() {
+    if (isCleaning) {
+      return;
+    }
+
+    setIsCleaning(true);
+
+    try {
+      const response = await fetch("/api/notifications", {
+        method: "DELETE",
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        return;
+      }
+
+      setIsCleanupOpen(false);
+      setPage(1);
+      setReloadVersion((current) => current + 1);
+    } finally {
+      setIsCleaning(false);
+    }
+  }
+
   const notifications = data?.notifications ?? [];
   const pagination = data?.pagination;
 
@@ -147,19 +176,32 @@ export function NotificationInbox() {
         <section className={styles.inbox} aria-label="알림 목록">
           <div className={styles.inboxHeader}>
             <h2>새로운 소식</h2>
-            {data?.ok && (data.unreadCount ?? 0) > 0 ? (
-              <button
-                type="button"
-                className={styles.readAllButton}
-                onClick={() => void markAllRead()}
-              >
-                모두 읽었숭
-              </button>
-            ) : (
-              <span className={styles.countBadge}>
-                {data?.unreadCount ?? 0}개
-              </span>
-            )}
+            <div className={styles.inboxActions}>
+              {data?.ok &&
+                (data.pagination?.totalItems ?? 0) >
+                  (data.unreadCount ?? 0) && (
+                  <button
+                    type="button"
+                    className={styles.cleanupButton}
+                    onClick={() => setIsCleanupOpen(true)}
+                  >
+                    읽은 소식 정리
+                  </button>
+                )}
+              {data?.ok && (data.unreadCount ?? 0) > 0 ? (
+                <button
+                  type="button"
+                  className={styles.readAllButton}
+                  onClick={() => void markAllRead()}
+                >
+                  모두 읽었숭
+                </button>
+              ) : (
+                <span className={styles.countBadge}>
+                  {data?.unreadCount ?? 0}개
+                </span>
+              )}
+            </div>
           </div>
 
           {isLoading ? (
@@ -241,6 +283,19 @@ export function NotificationInbox() {
             ))}
           </nav>
         )}
+
+        <CommunityConfirmModal
+          isOpen={isCleanupOpen}
+          isProcessing={isCleaning}
+          eyebrow="CLEAN MAILBOX"
+          icon="📮"
+          title="읽은 소식을 정리하겠숭?"
+          description="이미 읽은 알림만 우편함에서 삭제되며, 읽지 않은 소식은 그대로 남아요."
+          confirmLabel="정리하기"
+          processingLabel="정리하는 중..."
+          onCancel={() => setIsCleanupOpen(false)}
+          onConfirm={cleanupReadNotifications}
+        />
       </section>
     </main>
   );

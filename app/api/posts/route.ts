@@ -1,4 +1,4 @@
-import { count, desc, eq } from "drizzle-orm";
+import { count, desc, eq, like, or } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 import { getDb } from "../../../db";
@@ -6,6 +6,7 @@ import { posts, users } from "../../../db/schema";
 import { getRequestUser } from "../../../lib/authSession";
 import {
   COMMUNITY_PAGE_SIZE,
+  normalizeCommunitySearch,
   parsePage,
   validatePostInput,
 } from "../../../lib/community";
@@ -17,9 +18,21 @@ import {
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const requestedPage = parsePage(url.searchParams.get("page"));
+  const query = normalizeCommunitySearch(url.searchParams.get("q"));
   const db = getDb();
+  const searchFilter = query
+    ? or(
+        like(posts.title, `%${query}%`),
+        like(posts.content, `%${query}%`),
+        like(users.nickname, `%${query}%`),
+      )
+    : undefined;
 
-  const countRows = await db.select({ value: count() }).from(posts);
+  const countRows = await db
+    .select({ value: count() })
+    .from(posts)
+    .innerJoin(users, eq(posts.authorId, users.id))
+    .where(searchFilter);
   const totalItems = countRows[0]?.value ?? 0;
   const totalPages = Math.max(
     1,
@@ -32,6 +45,7 @@ export async function GET(request: Request) {
     .select(communityPostSummarySelection)
     .from(posts)
     .innerJoin(users, eq(posts.authorId, users.id))
+    .where(searchFilter)
     .orderBy(desc(posts.isNotice), desc(posts.createdAt))
     .limit(COMMUNITY_PAGE_SIZE)
     .offset(offset);
@@ -45,6 +59,7 @@ export async function GET(request: Request) {
       totalItems,
       totalPages,
     },
+    query,
   });
 }
 

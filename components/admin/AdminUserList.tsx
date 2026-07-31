@@ -4,8 +4,13 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import styles from "./Admin.module.css";
+import {
+  AdminDeleteConfirmModal,
+  AdminStatusModal,
+} from "./AdminActionModal";
 import type {
   AdminUser,
+  AdminUserDeleteResponse,
   AdminUserListResponse,
 } from "./adminTypes";
 
@@ -59,6 +64,16 @@ export function AdminUserList({
     ok: true,
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [reloadVersion, setReloadVersion] = useState(0);
+  const [deleteTarget, setDeleteTarget] = useState<AdminUser | null>(
+    null,
+  );
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [status, setStatus] = useState<{
+    icon: string;
+    title: string;
+    message: string;
+  } | null>(null);
 
   useEffect(() => {
     let isActive = true;
@@ -106,7 +121,56 @@ export function AdminUserList({
     return () => {
       isActive = false;
     };
-  }, [initialPage]);
+  }, [initialPage, reloadVersion]);
+
+  async function deleteResident() {
+    if (!deleteTarget || isDeleting) {
+      return;
+    }
+
+    setIsDeleting(true);
+
+    try {
+      const response = await fetch(
+        `/api/admin/users/${deleteTarget.id}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        },
+      );
+      const result =
+        (await response.json()) as AdminUserDeleteResponse;
+
+      if (!response.ok || !result.ok) {
+        throw new Error(result.message ?? "주민을 삭제하지 못했어요.");
+      }
+
+      const deletedNickname =
+        result.deletedUser?.nickname ?? deleteTarget.nickname;
+
+      setDeleteTarget(null);
+      setStatus({
+        icon: "🌰",
+        title: "삭제되었숭",
+        message: result.imageCleanupPending
+          ? `${deletedNickname} 주민은 삭제됐지만 프로필 이미지 정리가 지연되고 있어요.`
+          : `${deletedNickname} 주민과 연결된 활동을 모두 정리했어요.`,
+      });
+      setReloadVersion((current) => current + 1);
+    } catch (error) {
+      setDeleteTarget(null);
+      setStatus({
+        icon: "🥺",
+        title: "삭제하지 못했어요",
+        message:
+          error instanceof Error
+            ? error.message
+            : "잠시 후 다시 시도해 주세요.",
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  }
 
   if (isLoading) {
     return (
@@ -207,6 +271,20 @@ export function AdminUserList({
                   <span>가입일</span>
                   {formatDate(user.createdAt)}
                 </time>
+
+                {user.role === "admin" ? (
+                  <span className={styles.protectedAccount}>
+                    보호 계정
+                  </span>
+                ) : (
+                  <button
+                    type="button"
+                    className={styles.deleteUserButton}
+                    onClick={() => setDeleteTarget(user)}
+                  >
+                    주민 삭제
+                  </button>
+                )}
               </li>
             ))}
           </ol>
@@ -236,6 +314,21 @@ export function AdminUserList({
           ))}
         </nav>
       )}
+
+      <AdminDeleteConfirmModal
+        userNickname={deleteTarget?.nickname ?? null}
+        isProcessing={isDeleting}
+        onCancel={() => setDeleteTarget(null)}
+        onConfirm={deleteResident}
+      />
+
+      <AdminStatusModal
+        isOpen={Boolean(status)}
+        icon={status?.icon ?? "🌰"}
+        title={status?.title ?? ""}
+        message={status?.message ?? ""}
+        onClose={() => setStatus(null)}
+      />
     </>
   );
 }

@@ -72,6 +72,12 @@
   font-size: 1.25rem;
 }
 
+.inboxActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .countBadge {
   padding: 7px 11px;
   border-radius: 999px;
@@ -81,7 +87,8 @@
   font-weight: 950;
 }
 
-.readAllButton {
+.readAllButton,
+.cleanupButton {
   padding: 8px 12px;
   border: 0;
   border-radius: 999px;
@@ -93,12 +100,19 @@
   cursor: pointer;
 }
 
-.readAllButton:hover:not(:disabled) {
+.cleanupButton {
+  border: 1px solid rgba(75, 44, 35, 0.25);
+  background: var(--paper);
+}
+
+.readAllButton:hover:not(:disabled),
+.cleanupButton:hover:not(:disabled) {
   background: var(--yellow);
   color: var(--brown);
 }
 
-.readAllButton:disabled {
+.readAllButton:disabled,
+.cleanupButton:disabled {
   cursor: default;
   opacity: 0.5;
 }
@@ -232,6 +246,15 @@
   .inboxHeader,
   .itemLink {
     padding-inline: 20px;
+  }
+
+  .inboxHeader {
+    align-items: flex-start;
+  }
+
+  .inboxActions {
+    align-items: flex-end;
+    flex-direction: column;
   }
 
   .itemLink {

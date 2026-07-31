@@ -1,12 +1,16 @@
 import { CommunityHeader } from "@/components/community/CommunityHeader";
 import { CommunityList } from "@/components/community/CommunityList";
-import { parsePage } from "@/lib/community";
+import {
+  normalizeCommunitySearch,
+  parsePage,
+} from "@/lib/community";
 
 import styles from "@/components/community/Community.module.css";
 
 type CommunityPageProps = {
   searchParams: Promise<{
     page?: string;
+    q?: string;
   }>;
 };
 
@@ -15,6 +19,7 @@ export default async function CommunityPage({
 }: CommunityPageProps) {
   const query = await searchParams;
   const page = parsePage(query.page ?? null);
+  const searchQuery = normalizeCommunitySearch(query.q);
 
   return (
     <main className={styles.page}>
@@ -30,7 +35,10 @@ export default async function CommunityPage({
           </p>
         </section>
 
-        <CommunityList initialPage={page} />
+        <CommunityList
+          initialPage={page}
+          initialQuery={searchQuery}
+        />
       </div>
     </main>
   );

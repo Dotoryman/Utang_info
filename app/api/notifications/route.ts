@@ -145,3 +145,39 @@ export async function PATCH(request: Request) {
     unreadCount: unreadRows[0]?.value ?? 0,
   });
 }
+
+export async function DELETE(request: Request) {
+  const user = await getRequestUser(request);
+
+  if (!user) {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: "알림을 정리하려면 먼저 입장해 주세요.",
+      },
+      { status: 401 },
+    );
+  }
+
+  const db = getDb();
+  const recipientId = String(user.id);
+
+  await db
+    .delete(notifications)
+    .where(
+      and(
+        eq(notifications.recipientId, recipientId),
+        eq(notifications.isRead, true),
+      ),
+    );
+
+  const remainingRows = await db
+    .select({ value: count() })
+    .from(notifications)
+    .where(eq(notifications.recipientId, recipientId));
+
+  return NextResponse.json({
+    ok: true,
+    remainingCount: remainingRows[0]?.value ?? 0,
+  });
+}

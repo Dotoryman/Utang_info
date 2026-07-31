@@ -21,6 +21,7 @@ import type {
   ProfileActivityResponse,
   ProfileMutationResponse,
 } from "./profileTypes";
+import { ProfileDeleteModal } from "./ProfileDeleteModal";
 import { ProfileStatusModal } from "./ProfileStatusModal";
 
 const defaultAvatarUrl = "/utang-profile.png";
@@ -85,9 +86,11 @@ export function ProfileDashboard() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [deletePassword, setDeletePassword] = useState("");
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [activeRequest, setActiveRequest] = useState<
-    "image" | "nickname" | "password" | null
+    "image" | "nickname" | "password" | "account" | null
   >(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [statusModal, setStatusModal] =
@@ -429,6 +432,52 @@ export function ProfileDashboard() {
     }
   }
 
+  async function handleAccountDelete() {
+    if (!deletePassword || activeRequest === "account") {
+      return;
+    }
+
+    try {
+      setActiveRequest("account");
+
+      const response = await fetch("/api/profile", {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ password: deletePassword }),
+      });
+      const result = await readProfileMutationResponse(response);
+
+      if (!response.ok || !result.ok) {
+        throw new Error(result.message ?? "회원 탈퇴를 완료하지 못했어요.");
+      }
+
+      setDeletePassword("");
+      setIsDeleteModalOpen(false);
+      showStatus({
+        title: "탈퇴되었숭",
+        message: "그동안 우땅랜드와 함께해 주셔서 고마워요.",
+        icon: "🌰",
+        actionLabel: "우땅랜드로 돌아가기",
+        redirectToHome: true,
+      });
+    } catch (error) {
+      setIsDeleteModalOpen(false);
+      showStatus({
+        title: "회원 탈퇴를 완료하지 못했어요",
+        message:
+          error instanceof Error
+            ? error.message
+            : "잠시 후 다시 시도해 주세요.",
+        icon: "🥺",
+      });
+    } finally {
+      setActiveRequest(null);
+    }
+  }
+
   if (isLoading) {
     return (
       <main className={styles.page}>
@@ -726,6 +775,30 @@ export function ProfileDashboard() {
           </article>
         </section>
 
+        <section className={styles.dangerZone}>
+          <div>
+            <span>ACCOUNT MANAGEMENT</span>
+            <h2>주민 계정 관리</h2>
+            <p>
+              회원 탈퇴 시 주민증과 우땅랜드의 모든 활동이 함께
+              삭제돼요.
+            </p>
+          </div>
+          {user.role === "admin" ? (
+            <span className={styles.protectedAdmin}>
+              관리소장 계정은 보호되고 있어요.
+            </span>
+          ) : (
+            <button
+              type="button"
+              className={styles.deleteAccountButton}
+              onClick={() => setIsDeleteModalOpen(true)}
+            >
+              회원 탈퇴
+            </button>
+          )}
+        </section>
+
         <section className={styles.activitySection}>
           <div className={styles.activityHeading}>
             <div>
@@ -771,6 +844,18 @@ export function ProfileDashboard() {
         icon={statusModal.icon}
         actionLabel={statusModal.actionLabel}
         onClose={closeStatus}
+      />
+
+      <ProfileDeleteModal
+        isOpen={isDeleteModalOpen}
+        isProcessing={activeRequest === "account"}
+        password={deletePassword}
+        onPasswordChange={setDeletePassword}
+        onCancel={() => {
+          setDeletePassword("");
+          setIsDeleteModalOpen(false);
+        }}
+        onConfirm={handleAccountDelete}
       />
     </main>
   );

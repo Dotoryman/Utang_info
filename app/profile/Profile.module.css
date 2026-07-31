@@ -466,6 +466,65 @@
   outline: 3px solid rgba(241, 201, 80, 0.28);
 }
 
+.dangerZone {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 26px;
+  padding: 24px 28px;
+  border: 2px solid rgba(152, 75, 67, 0.38);
+  border-radius: 24px;
+  background: rgba(255, 244, 239, 0.82);
+}
+
+.dangerZone span:first-child {
+  color: #984b43;
+  font-size: 0.68rem;
+  font-weight: 950;
+  letter-spacing: 0.14em;
+}
+
+.dangerZone h2 {
+  margin: 5px 0 0;
+  font-size: 1.15rem;
+}
+
+.dangerZone p {
+  margin: 8px 0 0;
+  color: #7b5a45;
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.deleteAccountButton,
+.deleteAccountConfirm {
+  flex-shrink: 0;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 2px solid #984b43;
+  border-radius: 999px;
+  background: #984b43;
+  color: #fff;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 #e4ad8e;
+}
+
+.deleteAccountButton:hover,
+.deleteAccountConfirm:hover:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #e4ad8e;
+}
+
+.protectedAdmin {
+  flex-shrink: 0;
+  color: #984b43;
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
 .activitySection {
   margin-top: 34px;
   padding: 30px;
@@ -585,6 +644,76 @@
   animation: modalPopIn 220ms ease-out;
 }
 
+.deleteAccountModal {
+  width: min(100%, 460px);
+  padding: 32px 28px 28px;
+  border: 3px solid #7b5a45;
+  border-radius: 28px;
+  background: #fffdf9;
+  box-shadow: 7px 8px 0 #f1c950;
+  text-align: center;
+  animation: modalPopIn 220ms ease-out;
+}
+
+.deleteEyebrow {
+  margin: 0 0 8px;
+  color: #984b43;
+  font-size: 0.68rem;
+  font-weight: 950;
+  letter-spacing: 0.15em;
+}
+
+.deleteAccountModal h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.deleteAccountModal > p:last-of-type {
+  margin: 12px 0 20px;
+  color: #7b5a45;
+  line-height: 1.65;
+}
+
+.deletePasswordField {
+  display: grid;
+  gap: 7px;
+  text-align: left;
+}
+
+.deletePasswordField span {
+  color: #7b5a45;
+  font-size: 0.76rem;
+  font-weight: 850;
+}
+
+.deletePasswordField input {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 13px;
+  border: 1px solid rgba(123, 90, 69, 0.38);
+  border-radius: 13px;
+  background: #fff;
+  color: #2e2a27;
+  font: inherit;
+}
+
+.deletePasswordField input:focus {
+  border-color: #7b5a45;
+  outline: 3px solid rgba(241, 201, 80, 0.28);
+}
+
+.deleteModalActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.deleteAccountConfirm:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
 .modalIcon {
   display: block;
   margin-bottom: 10px;
@@ -636,7 +765,8 @@
 
 @media (max-width: 640px) {
   .panel,
-  .activitySection {
+  .activitySection,
+  .dangerZone {
     padding: 22px 18px;
   }
 
@@ -650,12 +780,27 @@
   .secondaryAction {
     width: 100%;
   }
+
+  .dangerZone {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .deleteAccountButton,
+  .protectedAdmin {
+    align-self: flex-start;
+  }
+
+  .deleteModalActions {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .loadingIcon,
   .modalBackdrop,
-  .statusModal {
+  .statusModal,
+  .deleteAccountModal {
     animation: none;
   }
 }
