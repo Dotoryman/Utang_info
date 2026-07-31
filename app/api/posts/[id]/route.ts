@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { getDb } from "../../../../db";
 import {
   comments,
+  notifications,
   postLikes,
   posts,
   users,
@@ -236,6 +237,7 @@ export async function DELETE(
   }
 
   const db = getDb();
+  await db.delete(notifications).where(eq(notifications.postId, id));
   await db.delete(posts).where(eq(posts.id, id));
 
   return NextResponse.json({

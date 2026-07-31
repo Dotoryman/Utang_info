@@ -8,6 +8,7 @@ type UserMenuProps = {
   name: string;
   avatarUrl?: string;
   role: string;
+  unreadCount: number;
   onLogout: () => void | Promise<void>;
 };
 
@@ -17,6 +18,7 @@ export function UserMenu({
   name,
   avatarUrl,
   role,
+  unreadCount,
   onLogout,
 }: UserMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -125,6 +127,21 @@ export function UserMenu({
           >
             <span aria-hidden="true">🪪</span>
             우땅 주민증
+          </Link>
+
+          <Link
+            href="/notifications"
+            className={styles.menuItem}
+            role="menuitem"
+            onClick={() => setIsOpen(false)}
+          >
+            <span aria-hidden="true">📮</span>
+            <span className={styles.menuItemLabel}>우땅 우편함</span>
+            {unreadCount > 0 && (
+              <span className={styles.notificationBadge}>
+                {unreadCount > 99 ? "99+" : unreadCount}
+              </span>
+            )}
           </Link>
 
           <Link

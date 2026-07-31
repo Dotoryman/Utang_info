@@ -7,6 +7,7 @@ import {
   posts,
 } from "../../../../../db/schema";
 import { getRequestUser } from "../../../../../lib/authSession";
+import { notifyPostLike } from "../../../../../lib/notificationServer";
 
 type LikeRouteContext = {
   params: Promise<{
@@ -82,6 +83,12 @@ export async function POST(
         createdAt: new Date(),
       })
       .onConflictDoNothing();
+
+    await notifyPostLike({
+      postId,
+      actorId: userId,
+      actorNickname: user.nickname,
+    });
   } else {
     await db
       .delete(postLikes)

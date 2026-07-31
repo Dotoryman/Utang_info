@@ -185,6 +185,60 @@ export const postLikes = sqliteTable(
   ],
 );
 
+export const notifications = sqliteTable(
+  "notifications",
+  {
+    id: text("id").primaryKey(),
+
+    recipientId: text("recipient_id")
+      .notNull()
+      .references(() => users.id, {
+        onDelete: "cascade",
+      }),
+
+    actorId: text("actor_id")
+      .notNull()
+      .references(() => users.id, {
+        onDelete: "cascade",
+      }),
+
+    postId: text("post_id")
+      .notNull()
+      .references(() => posts.id, {
+        onDelete: "cascade",
+      }),
+
+    type: text("type", {
+      enum: ["comment", "like"],
+    }).notNull(),
+
+    message: text("message").notNull(),
+
+    isRead: integer("is_read", {
+      mode: "boolean",
+    })
+      .notNull()
+      .default(false),
+
+    createdAt: integer("created_at", {
+      mode: "timestamp",
+    })
+      .notNull()
+      .$defaultFn(() => new Date()),
+  },
+  (table) => [
+    index("notifications_recipient_created_index").on(
+      table.recipientId,
+      table.createdAt,
+    ),
+    index("notifications_recipient_read_index").on(
+      table.recipientId,
+      table.isRead,
+    ),
+    index("notifications_post_id_index").on(table.postId),
+  ],
+);
+
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 
@@ -199,3 +253,6 @@ export type NewComment = typeof comments.$inferInsert;
 
 export type PostLike = typeof postLikes.$inferSelect;
 export type NewPostLike = typeof postLikes.$inferInsert;
+
+export type Notification = typeof notifications.$inferSelect;
+export type NewNotification = typeof notifications.$inferInsert;

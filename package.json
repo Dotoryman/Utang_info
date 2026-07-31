@@ -1,6 +1,6 @@
 {
   "name": "utang-info",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "private": true,
   "engines": {
     "node": ">=22.13.0"
@@ -10,7 +10,7 @@
     "build": "vinext build",
     "build:static": "vite build --config vite.static.config.ts",
     "start": "vinext start",
-    "test:unit": "node --experimental-strip-types --test tests/fortune-utils.test.mjs tests/auth-security.test.mjs tests/community-utils.test.mjs tests/profile-utils.test.mjs",
+    "test:unit": "node --experimental-strip-types --test tests/fortune-utils.test.mjs tests/auth-security.test.mjs tests/community-utils.test.mjs tests/profile-utils.test.mjs tests/notification-utils.test.mjs",
     "test": "npm run build && npm run test:unit",
     "lint": "eslint . --max-warnings=0",
     "check": "npm run lint && npm test",

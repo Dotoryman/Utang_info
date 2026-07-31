@@ -12,6 +12,7 @@ type AuthModal = "login" | "register" | null;
 export function AuthMenu() {
   const [authModal, setAuthModal] = useState<AuthModal>(null);
   const [user, setUser] = useState<AuthUser | null>(null);
+  const [unreadCount, setUnreadCount] = useState(0);
   const [registeredEmail, setRegisteredEmail] = useState("");
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
@@ -39,7 +40,28 @@ export function AuthMenu() {
         }
 
         const data = (await response.json()) as MeResponse;
-        setUser(data.authenticated ? data.user : null);
+        const nextUser = data.authenticated ? data.user : null;
+        setUser(nextUser);
+
+        if (nextUser) {
+          try {
+            const notificationResponse = await fetch(
+              "/api/notifications?page=1",
+              {
+                credentials: "include",
+                cache: "no-store",
+              },
+            );
+            const notificationData = (await notificationResponse.json()) as {
+              unreadCount?: number;
+            };
+            setUnreadCount(notificationData.unreadCount ?? 0);
+          } catch {
+            setUnreadCount(0);
+          }
+        } else {
+          setUnreadCount(0);
+        }
       } catch {
         if (isActive) {
           setUser(null);
@@ -70,12 +92,24 @@ export function AuthMenu() {
     }
 
     setUser(null);
+    setUnreadCount(0);
     setRegisteredEmail("");
   }
 
   function handleLoginSuccess(loginUser: AuthUser) {
     setUser(loginUser);
     setAuthModal(null);
+    void fetch("/api/notifications?page=1", {
+      credentials: "include",
+      cache: "no-store",
+    })
+      .then((response) => response.json())
+      .then((data: { unreadCount?: number }) => {
+        setUnreadCount(data.unreadCount ?? 0);
+      })
+      .catch(() => {
+        setUnreadCount(0);
+      });
   }
 
   function handleRegisterSuccess(email: string) {
@@ -94,6 +128,7 @@ export function AuthMenu() {
           name={user.nickname}
           avatarUrl={user.profileImage}
           role={user.role}
+          unreadCount={unreadCount}
           onLogout={handleLogout}
         />
       ) : (

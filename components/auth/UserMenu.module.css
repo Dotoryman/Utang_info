@@ -154,3 +154,22 @@
     right: -4px;
   }
 }
+
+.menuItemLabel {
+  min-width: 0;
+  flex: 1;
+}
+
+.notificationBadge {
+  display: inline-grid;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  place-items: center;
+  border-radius: 999px;
+  background: #d96c5f;
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 950;
+  line-height: 1;
+}

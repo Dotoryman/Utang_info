@@ -17,6 +17,7 @@ import {
   communityCommentSelection,
   serializeCommunityComment,
 } from "../../../../../lib/communityServer";
+import { notifyPostComment } from "../../../../../lib/notificationServer";
 
 type CommentsRouteContext = {
   params: Promise<{
@@ -146,6 +147,12 @@ export async function POST(
     content: validation.value.content,
     createdAt: now,
     updatedAt: now,
+  });
+
+  await notifyPostComment({
+    postId,
+    actorId: String(user.id),
+    actorNickname: user.nickname,
   });
 
   return NextResponse.json(
