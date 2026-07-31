@@ -12,5 +12,12 @@
       "database_id": "23ef9f9a-b39d-4efb-a916-5185e2be733e",
       "migrations_dir": "drizzle"
     }
+  ],
+
+  "r2_buckets": [
+    {
+      "binding": "PROFILE_IMAGES",
+      "bucket_name": "utangland-profile-images"
+    }
   ]
 }

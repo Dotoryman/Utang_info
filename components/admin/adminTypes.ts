@@ -16,6 +16,13 @@ export type AdminUserListResponse = {
     totalAdmins: number;
     totalResidents: number;
   };
+  storage?: {
+    usedBytes: number;
+    limitBytes: number;
+    remainingBytes: number;
+    objectCount: number;
+    usagePercent: number;
+  } | null;
   pagination?: {
     page: number;
     pageSize: number;

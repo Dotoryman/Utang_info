@@ -27,6 +27,31 @@ function getResidentNumber(id: string): string {
   return id.replaceAll("-", "").slice(0, 8).toUpperCase();
 }
 
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) {
+    return `${bytes} B`;
+  }
+
+  const units = ["KB", "MB", "GB", "TB"];
+  let value = bytes / 1024;
+  let unitIndex = 0;
+
+  while (value >= 1024 && unitIndex < units.length - 1) {
+    value /= 1024;
+    unitIndex += 1;
+  }
+
+  return `${value.toFixed(value >= 10 ? 1 : 2)} ${units[unitIndex]}`;
+}
+
+function formatUsagePercent(value: number): string {
+  if (value > 0 && value < 0.01) {
+    return "<0.01%";
+  }
+
+  return `${value.toFixed(value >= 10 ? 1 : 2)}%`;
+}
+
 export function AdminUserList({
   initialPage,
 }: AdminUserListProps) {
@@ -126,6 +151,8 @@ export function AdminUserList({
         </article>
       </section>
 
+      <StorageUsageCard storage={data.storage} />
+
       <section className={styles.directory} aria-label="회원 목록">
         <div className={styles.directoryHeader}>
           <div>
@@ -210,6 +237,103 @@ export function AdminUserList({
         </nav>
       )}
     </>
+  );
+}
+
+function StorageUsageCard({
+  storage,
+}: {
+  storage: AdminUserListResponse["storage"];
+}) {
+  if (!storage) {
+    return (
+      <section className={styles.storageCard}>
+        <div className={styles.storageHeading}>
+          <div>
+            <span>R2 STORAGE</span>
+            <h2>프로필 이미지 저장공간</h2>
+          </div>
+          <strong className={styles.storageUnavailable}>확인 불가</strong>
+        </div>
+        <p className={styles.storageDescription}>
+          R2 저장소가 연결되면 사용량이 여기에 표시돼요.
+        </p>
+      </section>
+    );
+  }
+
+  const state =
+    storage.usagePercent >= 90
+      ? "danger"
+      : storage.usagePercent >= 70
+        ? "warning"
+        : "safe";
+  const stateLabel =
+    state === "danger"
+      ? "용량 주의"
+      : state === "warning"
+        ? "확인 필요"
+        : "안전";
+  const visiblePercent =
+    storage.usedBytes > 0
+      ? Math.max(storage.usagePercent, 0.6)
+      : 0;
+
+  return (
+    <section className={styles.storageCard} aria-label="R2 저장공간 현황">
+      <div className={styles.storageHeading}>
+        <div>
+          <span>R2 STORAGE</span>
+          <h2>프로필 이미지 저장공간</h2>
+        </div>
+        <strong
+          className={styles.storageState}
+          data-state={state}
+        >
+          {stateLabel}
+        </strong>
+      </div>
+
+      <div
+        className={styles.storageTrack}
+        role="progressbar"
+        aria-label="프로필 이미지 저장공간 사용률"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Number(storage.usagePercent.toFixed(2))}
+      >
+        <span
+          className={styles.storageFill}
+          data-state={state}
+          style={{ width: `${visiblePercent}%` }}
+        />
+      </div>
+
+      <div className={styles.storageMetrics}>
+        <div>
+          <span>사용 중</span>
+          <strong>{formatBytes(storage.usedBytes)}</strong>
+        </div>
+        <div>
+          <span>안전 한도</span>
+          <strong>{formatBytes(storage.limitBytes)}</strong>
+        </div>
+        <div>
+          <span>남은 용량</span>
+          <strong>{formatBytes(storage.remainingBytes)}</strong>
+        </div>
+        <div>
+          <span>저장 이미지</span>
+          <strong>{storage.objectCount}개</strong>
+        </div>
+      </div>
+
+      <p className={styles.storageCaption}>
+        현재 {formatUsagePercent(storage.usagePercent)} 사용 중 ·
+        Cloudflare 무료 저장공간보다 여유 있게 설정한 8GiB 안전
+        한도예요.
+      </p>
+    </section>
   );
 }
 

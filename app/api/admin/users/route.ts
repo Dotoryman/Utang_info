@@ -1,3 +1,4 @@
+import { env } from "cloudflare:workers";
 import { count, desc, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
@@ -9,6 +10,7 @@ import {
   parseAdminPage,
 } from "../../../../lib/admin";
 import { getRequestUser } from "../../../../lib/authSession";
+import { getProfileImageStorageUsage } from "../../../../lib/profileStorage";
 
 export async function GET(request: Request) {
   const viewer = await getRequestUser(request);
@@ -37,12 +39,15 @@ export async function GET(request: Request) {
   const requestedPage = parseAdminPage(url.searchParams.get("page"));
   const db = getDb();
 
-  const [totalRows, adminRows] = await Promise.all([
+  const [totalRows, adminRows, storage] = await Promise.all([
     db.select({ value: count() }).from(users),
     db
       .select({ value: count() })
       .from(users)
       .where(eq(users.role, "admin")),
+    env.PROFILE_IMAGES
+      ? getProfileImageStorageUsage(env.PROFILE_IMAGES).catch(() => null)
+      : Promise.resolve(null),
   ]);
 
   const totalItems = totalRows[0]?.value ?? 0;
@@ -79,6 +84,7 @@ export async function GET(request: Request) {
       totalAdmins,
       totalResidents: Math.max(0, totalItems - totalAdmins),
     },
+    storage,
     pagination: {
       page,
       pageSize: ADMIN_USER_PAGE_SIZE,
