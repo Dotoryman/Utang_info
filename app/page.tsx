@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { AuthMenu } from "@/components/auth/AuthMenu";
 import { FortuneExperience } from "@/components/fortune/FortuneExperience";
+import { SiteBrand } from "@/components/site/SiteBrand";
 
 const instagramUrl =
   "https://www.instagram.com/utang.co?igsh=aWlqMWl5NTVsZG1m";
@@ -35,9 +36,9 @@ const moments = [
 
 const expressions = [
   {
-    image: "/images/utang-cheer.png",
-    imageAlt: "두 팔을 들고 신나게 응원하는 우땅이",
-    label: "같이 신나숭!",
+    image: "/images/utang-flower.png",
+    imageAlt: "노란 꽃을 건네는 우땅이",
+    label: "다정하게 인사숭!",
   },
   {
     image: "/images/utang-party.png",
@@ -60,19 +61,7 @@ export default function Home() {
   return (
     <main id="top">
       <header className="site-header">
-        <a
-          className="brand"
-          href="#top"
-          aria-label="우땅랜드 메인 페이지 맨 위로"
-        >
-          <span className="brand-sun" aria-hidden="true">
-            <img src="/images/utang-sun.png" alt="" />
-          </span>
-          <span className="brand-copy">
-            <strong>UTANGLAND</strong>
-            <small>우땅이 팬페이지</small>
-          </span>
-        </a>
+        <SiteBrand href="#top" label="우땅랜드 메인 페이지 맨 위로" />
 
         <nav aria-label="주요 메뉴">
           <a href="#hello">우땅이</a>
@@ -165,8 +154,8 @@ export default function Home() {
             <h2 id="hello-title">안녕,<br />나는 우땅이야.</h2>
 
             <div className="hello-character" aria-hidden="true">
-              <span>어서 와숭!</span>
-              <img src="/images/utang-flower.png" alt="" />
+              <span>반가워숭!</span>
+              <img src="/images/utang-cheer.png" alt="" />
             </div>
           </div>
 

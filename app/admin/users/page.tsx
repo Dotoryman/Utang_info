@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { AdminUserList } from "@/components/admin/AdminUserList";
+import { SiteBrand } from "@/components/site/SiteBrand";
 import styles from "@/components/admin/Admin.module.css";
 import { parseAdminPage } from "@/lib/admin";
 
@@ -20,16 +21,7 @@ export default async function AdminUsersPage({
     <main className={styles.page}>
       <div className={styles.shell}>
         <header className={styles.header}>
-          <Link
-            href="/"
-            className={styles.brand}
-            aria-label="우땅랜드 홈"
-          >
-            <span className={styles.brandMark} aria-hidden="true">
-              ●ᴥ●
-            </span>
-            <span>UTANGLAND</span>
-          </Link>
+          <SiteBrand compact />
 
           <Link href="/" className={styles.homeLink}>
             ← 우땅랜드로

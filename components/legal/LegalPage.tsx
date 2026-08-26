@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { SiteBrand } from "@/components/site/SiteBrand";
 import styles from "./LegalPage.module.css";
 
 type LegalPageProps = {
@@ -20,12 +21,7 @@ export function LegalPage({
     <main className={styles.page}>
       <div className={styles.shell}>
         <header className={styles.header}>
-          <Link className={styles.brand} href="/" aria-label="우땅랜드 홈">
-            <span className={styles.brandMark} aria-hidden="true">
-              ●ᴥ●
-            </span>
-            <span>UTANGLAND</span>
-          </Link>
+          <SiteBrand compact />
           <Link className={styles.homeLink} href="/">
             ← 우땅랜드로
           </Link>

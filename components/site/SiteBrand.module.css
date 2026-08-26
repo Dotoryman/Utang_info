@@ -1,0 +1,62 @@
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex: 0 0 auto;
+  color: var(--brown);
+}
+
+.sun {
+  width: 68px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  transition: transform .22s ease;
+}
+
+.sun img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.copy {
+  display: grid;
+  gap: 2px;
+}
+
+.copy strong {
+  font-size: 1rem;
+  font-weight: 950;
+  letter-spacing: .1em;
+}
+
+.copy small {
+  color: var(--brown-soft);
+  font-size: .68rem;
+  font-weight: 750;
+  letter-spacing: .02em;
+}
+
+.brand:hover .sun { transform: rotate(7deg) scale(1.05); }
+
+.brand:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 4px;
+}
+
+.compact .sun { width: 54px; }
+.compact .copy strong { font-size: .9rem; }
+.compact .copy small { font-size: .62rem; }
+
+@media (max-width: 700px) {
+  .sun { width: 56px; }
+  .copy strong { font-size: .85rem; }
+  .copy small { font-size: .62rem; }
+  .compact .sun { width: 48px; }
+}
+
+@media (max-width: 430px) {
+  .copy small { display: none; }
+  .sun { width: 50px; }
+}

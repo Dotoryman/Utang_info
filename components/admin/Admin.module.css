@@ -30,28 +30,6 @@
   border-bottom: 2px solid var(--brown);
 }
 
-.brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 1rem;
-  font-weight: 950;
-  letter-spacing: 0.1em;
-}
-
-.brandMark {
-  display: grid;
-  width: 40px;
-  aspect-ratio: 1;
-  place-items: center;
-  border-radius: 50%;
-  background: var(--brown);
-  color: var(--cream);
-  font-size: 0.68rem;
-  letter-spacing: -0.12em;
-  transform: rotate(-7deg);
-}
-
 .homeLink {
   color: var(--brown-soft);
   font-size: 0.88rem;
@@ -637,10 +615,6 @@
 
   .header {
     padding-bottom: 16px;
-  }
-
-  .brand {
-    font-size: 0.88rem;
   }
 
   .hero {

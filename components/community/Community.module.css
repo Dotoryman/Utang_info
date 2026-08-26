@@ -21,28 +21,6 @@
   margin-bottom: 44px;
 }
 
-.brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 1rem;
-  font-weight: 950;
-  letter-spacing: .08em;
-}
-
-.brandMark {
-  display: grid;
-  width: 40px;
-  aspect-ratio: 1;
-  place-items: center;
-  border-radius: 50%;
-  background: var(--brown);
-  color: var(--cream);
-  font-size: .7rem;
-  letter-spacing: -.12em;
-  transform: rotate(-7deg);
-}
-
 .homeLink,
 .writeButton,
 .secondaryButton,
