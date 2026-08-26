@@ -339,17 +339,18 @@ main { overflow: hidden; }
 }
 .hello-character {
   position: absolute;
-  width: 270px;
-  right: 2%;
+  width: 320px;
+  left: 50%;
+  right: auto;
   bottom: 0;
-  padding: 28px 28px 22px;
+  padding: 32px 30px 25px;
   display: grid;
   place-items: center;
   border: 3px solid var(--brown);
   border-radius: 46% 54% 48% 52% / 52% 44% 56% 48%;
   background: var(--yellow);
   box-shadow: 7px 8px 0 rgb(75 44 35 / 13%);
-  transform: rotate(-3deg);
+  transform: translateX(-50%) rotate(-3deg);
 }
 .hello-character span {
   position: absolute;
@@ -367,8 +368,8 @@ main { overflow: hidden; }
   transform: rotate(5deg);
 }
 .hello-character img {
-  width: 215px;
-  height: 175px;
+  width: 260px;
+  height: 205px;
   object-fit: contain;
   transform: rotate(3deg);
 }
@@ -594,7 +595,7 @@ main { overflow: hidden; }
   .hello-grid,
   .meet-section { grid-template-columns: 1fr; gap: 58px; }
   .hello-title-wrap { min-height: 400px; }
-  .hello-character { width: 245px; right: 8%; }
+  .hello-character { width: 285px; }
   .expression-heading { align-items: start; flex-direction: column; }
   .expression-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .moment-grid { grid-template-columns: 1fr; gap: 26px; }
@@ -635,8 +636,8 @@ main { overflow: hidden; }
   .hello-section { padding: 105px 0; }
   .hello-grid { gap: 42px; padding-top: 46px; }
   .hello-title-wrap { min-height: 360px; }
-  .hello-character { width: 205px; right: 2%; padding: 22px 18px 17px; }
-  .hello-character img { width: 165px; height: 135px; }
+  .hello-character { width: 235px; padding: 24px 20px 18px; }
+  .hello-character img { width: 190px; height: 150px; }
   .profile-list div { grid-template-columns: 108px 1fr; }
   .expression-section { width: min(100% - 32px, 1180px); padding-bottom: 108px; }
   .expression-heading { padding-top: 46px; gap: 22px; }
