@@ -6,6 +6,7 @@ import styles from "./Fortune.module.css";
 import {
   createFortuneImage,
   downloadFortuneImage,
+  getFortuneCharacterImage,
 } from "./fortuneImage";
 import type { DailyFortune, Fortune } from "./fortuneTypes";
 
@@ -41,17 +42,7 @@ export function FortuneResult({
   fortune,
   result,
 }: FortuneResultProps) {
-  const characterImages = [
-    "/images/utang-sparkle.png",
-    "/images/utang-heart.png",
-    "/images/utang-flower.png",
-    "/images/utang-cheer.png",
-  ];
-  const characterIndex = Array.from(fortune.id).reduce(
-    (sum, character) => sum + character.charCodeAt(0),
-    0,
-  ) % characterImages.length;
-  const characterImage = characterImages[characterIndex];
+  const characterImage = getFortuneCharacterImage(fortune.id);
   const [imageBlob, setImageBlob] = useState<Blob | null>(null);
   const [shareStatus, setShareStatus] = useState(
     "공유용 운세 카드를 준비하고 있어요.",

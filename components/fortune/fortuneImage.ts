@@ -2,6 +2,12 @@ import type { DailyFortune, Fortune } from "./fortuneTypes";
 
 const CARD_WIDTH = 1080;
 const CARD_HEIGHT = 1350;
+const FORTUNE_CHARACTER_IMAGES = [
+  "/images/utang-sparkle.png",
+  "/images/utang-heart.png",
+  "/images/utang-flower.png",
+  "/images/utang-cheer.png",
+] as const;
 const COLORS = {
   cream: "#f8f0df",
   paper: "#fffaf0",
@@ -11,6 +17,61 @@ const COLORS = {
   peach: "#e4ad8e",
   yellow: "#f1c950",
 };
+
+export function getFortuneCharacterImage(fortuneId: string) {
+  const characterIndex = Array.from(fortuneId).reduce(
+    (sum, character) => sum + character.charCodeAt(0),
+    0,
+  ) % FORTUNE_CHARACTER_IMAGES.length;
+
+  return FORTUNE_CHARACTER_IMAGES[characterIndex];
+}
+
+function loadCanvasImage(source: string) {
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    const image = new Image();
+
+    image.decoding = "async";
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error(`이미지를 불러오지 못했습니다: ${source}`));
+    image.src = source;
+  });
+}
+
+async function loadOptionalCanvasImage(source: string) {
+  try {
+    return await loadCanvasImage(source);
+  } catch {
+    return null;
+  }
+}
+
+function drawContainedImage(
+  context: CanvasRenderingContext2D,
+  image: HTMLImageElement | null,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+) {
+  if (!image || image.naturalWidth === 0 || image.naturalHeight === 0) {
+    return;
+  }
+
+  const scale = Math.min(width / image.naturalWidth, height / image.naturalHeight);
+  const drawWidth = image.naturalWidth * scale;
+  const drawHeight = image.naturalHeight * scale;
+  const drawX = x + (width - drawWidth) / 2;
+  const drawY = y + (height - drawHeight) / 2;
+
+  context.save();
+  context.shadowColor = "rgba(75, 44, 35, .18)";
+  context.shadowBlur = 0;
+  context.shadowOffsetX = 7;
+  context.shadowOffsetY = 8;
+  context.drawImage(image, drawX, drawY, drawWidth, drawHeight);
+  context.restore();
+}
 
 function roundedRect(
   context: CanvasRenderingContext2D,
@@ -93,6 +154,13 @@ export async function createFortuneImage(
     await document.fonts.ready;
   }
 
+  const [fortuneCharacter, numberCharacter, quoteCharacter] =
+    await Promise.all([
+      loadOptionalCanvasImage(getFortuneCharacterImage(fortune.id)),
+      loadOptionalCanvasImage("/images/utang-party.png"),
+      loadOptionalCanvasImage("/images/utang-face.png"),
+    ]);
+
   const canvas = document.createElement("canvas");
   canvas.width = CARD_WIDTH;
   canvas.height = CARD_HEIGHT;
@@ -110,6 +178,8 @@ export async function createFortuneImage(
   context.beginPath();
   context.arc(930, 145, 170, 0, Math.PI * 2);
   context.fill();
+
+  drawContainedImage(context, fortuneCharacter, 810, 30, 230, 210);
 
   context.fillStyle = COLORS.yellow;
   context.beginPath();
@@ -189,6 +259,15 @@ export async function createFortuneImage(
   roundedRect(context, 90, numberPanelY, 900, 225, 34);
   context.fill();
 
+  drawContainedImage(
+    context,
+    numberCharacter,
+    820,
+    numberPanelY - 68,
+    145,
+    118,
+  );
+
   context.textAlign = "left";
   context.fillStyle = COLORS.yellow;
   context.font =
@@ -226,15 +305,16 @@ export async function createFortuneImage(
   context.fillStyle = COLORS.brown;
   context.font =
     '900 25px Pretendard, "Noto Sans KR", "Apple SD Gothic Neo", sans-serif';
-  context.fillText("🐵 우땅 한마디", 135, quoteY + 45);
+  drawContainedImage(context, quoteCharacter, 108, quoteY + 17, 118, 118);
+  context.fillText("우땅 한마디", 260, quoteY + 45);
   context.font =
     '750 29px Pretendard, "Noto Sans KR", "Apple SD Gothic Neo", sans-serif';
   drawWrappedText(
     context,
     `“${fortune.utangMessage}”`,
-    135,
+    260,
     quoteY + 93,
-    805,
+    670,
     39,
   );
 
