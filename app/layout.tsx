@@ -11,8 +11,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const protocol = requestHeaders.get("x-forwarded-proto") ??
     (host.startsWith("localhost") ? "http" : "https");
   const origin = `${protocol}://${host}`;
-  const title = "우땅이 | 우다다 달리는 다정한 친구";
-  const description = "엉뚱해서 웃기고 다정해서 좋은 원숭이 캐릭터, 우땅이를 소개합니다.";
+  const title = "우땅랜드";
+  const description =
+    "엉뚱하고 솔직하고 다정한 원숭이 캐릭터 우땅이를 좋아하는 사람들이 함께 즐기는 비영리 팬페이지입니다.";
 
   return {
     title,
