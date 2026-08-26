@@ -497,6 +497,7 @@
 }
 
 .shareStatus,
+.mobileShareHint,
 .dailyNote,
 .disclaimer {
   text-align: center;
@@ -508,6 +509,14 @@
   color: var(--brown);
   font-size: .76rem;
   font-weight: 800;
+}
+
+.mobileShareHint {
+  margin: 5px 0 0;
+  color: var(--caramel);
+  font-size: .72rem;
+  font-weight: 800;
+  line-height: 1.55;
 }
 
 .dailyNote {
@@ -644,7 +653,11 @@
   .quote { align-items: flex-start; padding: 16px; }
   .quoteCharacter { width: 46px; height: 46px; }
   .actions { grid-template-columns: 1fr 1fr; }
-  .actionButton { padding-inline: 10px; }
+  .actionButton {
+    min-height: 52px;
+    padding: 8px 12px;
+    line-height: 1.35;
+  }
   .dailyNote { padding-inline: 6px; }
 }
 

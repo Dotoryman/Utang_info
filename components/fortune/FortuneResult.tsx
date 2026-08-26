@@ -15,6 +15,27 @@ type FortuneResultProps = {
   result: DailyFortune;
 };
 
+function createFortuneFile(imageBlob: Blob, date: string) {
+  return new File([imageBlob], `utang-fortune-${date}.png`, {
+    type: "image/png",
+  });
+}
+
+function canUseNativeImageShare(file: File) {
+  return (
+    typeof navigator.share === "function" &&
+    typeof navigator.canShare === "function" &&
+    navigator.canShare({ files: [file] })
+  );
+}
+
+function isMobileDevice() {
+  return (
+    navigator.maxTouchPoints > 0 &&
+    window.matchMedia("(pointer: coarse)").matches
+  );
+}
+
 export function FortuneResult({
   dateLabel,
   fortune,
@@ -35,6 +56,7 @@ export function FortuneResult({
   const [shareStatus, setShareStatus] = useState(
     "공유용 운세 카드를 준비하고 있어요.",
   );
+  const [usesMobileShareSheet, setUsesMobileShareSheet] = useState(false);
 
   useEffect(() => {
     let isCurrent = true;
@@ -43,6 +65,9 @@ export function FortuneResult({
       .then((blob) => {
         if (isCurrent) {
           setImageBlob(blob);
+          setUsesMobileShareSheet(
+            isMobileDevice() && canUseNativeImageShare(createFortuneFile(blob, result.date)),
+          );
           setShareStatus("공유용 운세 카드가 준비됐어요.");
         }
       })
@@ -57,9 +82,24 @@ export function FortuneResult({
     };
   }, [dateLabel, fortune, result]);
 
-  function saveImage() {
+  async function saveImage() {
     if (!imageBlob) {
       return;
+    }
+
+    const file = createFortuneFile(imageBlob, result.date);
+
+    if (isMobileDevice() && canUseNativeImageShare(file)) {
+      try {
+        await navigator.share({ files: [file] });
+        setShareStatus("사진 저장 메뉴를 완료했어요.");
+        return;
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          setShareStatus("사진 저장을 취소했어요.");
+          return;
+        }
+      }
     }
 
     downloadFortuneImage(imageBlob, result.date);
@@ -71,22 +111,15 @@ export function FortuneResult({
       return;
     }
 
-    const file = new File([imageBlob], `utang-fortune-${result.date}.png`, {
-      type: "image/png",
-    });
+    const file = createFortuneFile(imageBlob, result.date);
 
     try {
-      if (
-        typeof navigator.share === "function" &&
-        typeof navigator.canShare === "function" &&
-        navigator.canShare({ files: [file] })
-      ) {
+      if (canUseNativeImageShare(file)) {
         await navigator.share({
           files: [file],
           title: "우땅점술소 오늘의 운세",
-          text: "우땅이가 골라준 오늘의 도토리를 확인해 보세요!",
         });
-        setShareStatus("운세 이미지를 공유했어요.");
+        setShareStatus("공유를 완료했어요.");
         return;
       }
 
@@ -164,7 +197,7 @@ export function FortuneResult({
           onClick={saveImage}
           disabled={!imageBlob}
         >
-          이미지로 저장
+          {usesMobileShareSheet ? "사진 앱에 저장" : "이미지로 저장"}
         </button>
         <button
           type="button"
@@ -172,13 +205,18 @@ export function FortuneResult({
           onClick={shareImage}
           disabled={!imageBlob}
         >
-          공유하기
+          카카오톡 등으로 공유
         </button>
       </div>
 
       <p className={styles.shareStatus} aria-live="polite">
         {shareStatus}
       </p>
+      {usesMobileShareSheet ? (
+        <p className={styles.mobileShareHint}>
+          기기의 공유 창에서 사진 저장 또는 카카오톡을 선택해 주세요.
+        </p>
+      ) : null}
       <p className={styles.dailyNote}>
         오늘은 다시 열어도 같은 운세가 보여요. 내일 새로운 도토리를 만나러
         오세요!
