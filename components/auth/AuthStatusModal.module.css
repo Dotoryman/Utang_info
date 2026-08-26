@@ -4,13 +4,17 @@
   z-index: 1200;
   display: grid;
   place-items: center;
-  padding: 22px;
+  padding:
+    max(16px, env(safe-area-inset-top))
+    max(16px, env(safe-area-inset-right))
+    max(16px, env(safe-area-inset-bottom))
+    max(16px, env(safe-area-inset-left));
   background: rgb(27 24 21 / 58%);
   backdrop-filter: blur(6px);
 }
 
 .modal {
-  width: min(390px, 100%);
+  width: min(390px, calc(100vw - 32px));
   padding: 32px 28px 28px;
   border: 3px solid #4b2c23;
   border-radius: 28px;

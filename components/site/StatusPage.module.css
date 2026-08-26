@@ -11,7 +11,9 @@
 }
 
 .card {
-  width: min(560px, 100%);
+  width: 100%;
+  max-width: 560px;
+  min-width: 0;
   padding: 48px 38px;
   border: 3px solid #4b2c23;
   border-radius: 32px;

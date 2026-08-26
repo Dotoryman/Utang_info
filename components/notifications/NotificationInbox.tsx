@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { CommunityConfirmModal } from "../community/CommunityConfirmModal";
+import { SiteBrand } from "../site/SiteBrand";
 import styles from "./NotificationInbox.module.css";
 import type {
   NotificationItem,
@@ -162,15 +163,19 @@ export function NotificationInbox() {
   return (
     <main className={styles.page}>
       <section className={styles.shell}>
+        <div className={styles.topbar}>
+          <SiteBrand compact />
+          <Link href="/" className={styles.homeLink}>
+            ← 우땅랜드로
+          </Link>
+        </div>
+
         <header className={styles.header}>
           <div>
             <p className={styles.eyebrow}>UTANGLAND MAILBOX</p>
             <h1>우땅 우편함</h1>
             <p>내 이야기에 도착한 작은 소식을 모아봤숭.</p>
           </div>
-          <Link href="/" className={styles.homeLink}>
-            ← 우땅랜드로
-          </Link>
         </header>
 
         <section className={styles.inbox} aria-label="알림 목록">

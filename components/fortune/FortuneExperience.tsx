@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import { FortuneButton } from "./FortuneButton";
 import { getFortuneById } from "./fortuneData";
@@ -36,7 +37,8 @@ export function FortuneExperience() {
       return;
     }
 
-    const previousOverflow = document.body.style.overflow;
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
     const focusTimer = window.setTimeout(() => {
       closeButtonRef.current?.focus();
     }, 0);
@@ -68,12 +70,14 @@ export function FortuneExperience() {
       }
     }
 
+    document.documentElement.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
     document.addEventListener("keydown", handleKeyDown);
 
     return () => {
       window.clearTimeout(focusTimer);
-      document.body.style.overflow = previousOverflow;
+      document.documentElement.style.overflow = previousHtmlOverflow;
+      document.body.style.overflow = previousBodyOverflow;
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [closeFortune, isOpen]);
@@ -115,17 +119,20 @@ export function FortuneExperience() {
     <>
       <FortuneButton buttonRef={openButtonRef} onClick={openFortune} />
 
-      {isOpen && result && (
-        <FortuneModal
-          closeButtonRef={closeButtonRef}
-          dateLabel={getDateLabel()}
-          fortune={fortune}
-          isDrawing={isDrawing}
-          modalRef={modalRef}
-          onClose={closeFortune}
-          result={result}
-        />
-      )}
+      {isOpen &&
+        result &&
+        createPortal(
+          <FortuneModal
+            closeButtonRef={closeButtonRef}
+            dateLabel={getDateLabel()}
+            fortune={fortune}
+            isDrawing={isDrawing}
+            modalRef={modalRef}
+            onClose={closeFortune}
+            result={result}
+          />,
+          document.body,
+        )}
     </>
   );
 }

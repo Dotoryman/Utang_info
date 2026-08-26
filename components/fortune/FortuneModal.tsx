@@ -50,37 +50,44 @@ export function FortuneModal({
           ×
         </button>
 
-        <div className={styles.heading}>
-          <span className={styles.mascot} aria-hidden="true">
-            🐵
-          </span>
-          <div>
-            <p>{dateLabel}</p>
-            <h2 id="fortune-modal-title">우땅점술소</h2>
-          </div>
-        </div>
-
-        {isDrawing ? (
-          <div
-            className={styles.drawing}
-            id="fortune-modal-description"
-            aria-live="polite"
-          >
-            <div className={styles.drawingAcorns} aria-hidden="true">
-              <span>🌰</span>
-              <span>🌰</span>
-              <span>🌰</span>
+        <div className={styles.modalBody}>
+          <div className={styles.heading}>
+            <span className={styles.mascot} aria-hidden="true">
+              <img src="/images/utang-sun.png" alt="" />
+            </span>
+            <div>
+              <p>{dateLabel}</p>
+              <h2 id="fortune-modal-title">우땅점술소</h2>
             </div>
-            <strong>오늘의 도토리를 고르는 중...</strong>
-            <p>우땅이가 행운이 가득한 도토리를 찾고 있어요.</p>
           </div>
-        ) : (
-          <FortuneResult
-            dateLabel={dateLabel}
-            fortune={fortune}
-            result={result}
-          />
-        )}
+
+          {isDrawing ? (
+            <div
+              className={styles.drawing}
+              id="fortune-modal-description"
+              aria-live="polite"
+            >
+              <img
+                className={styles.drawingCharacter}
+                src="/images/utang-dance.png"
+                alt=""
+              />
+              <div className={styles.drawingAcorns} aria-hidden="true">
+                <span>🌰</span>
+                <span>🌰</span>
+                <span>🌰</span>
+              </div>
+              <strong>오늘의 도토리를 고르는 중...</strong>
+              <p>우땅이가 행운이 가득한 도토리를 찾고 있어요.</p>
+            </div>
+          ) : (
+            <FortuneResult
+              dateLabel={dateLabel}
+              fortune={fortune}
+              result={result}
+            />
+          )}
+        </div>
       </section>
     </div>
   );

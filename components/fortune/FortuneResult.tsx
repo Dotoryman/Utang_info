@@ -20,6 +20,17 @@ export function FortuneResult({
   fortune,
   result,
 }: FortuneResultProps) {
+  const characterImages = [
+    "/images/utang-sparkle.png",
+    "/images/utang-heart.png",
+    "/images/utang-flower.png",
+    "/images/utang-cheer.png",
+  ];
+  const characterIndex = Array.from(fortune.id).reduce(
+    (sum, character) => sum + character.charCodeAt(0),
+    0,
+  ) % characterImages.length;
+  const characterImage = characterImages[characterIndex];
   const [imageBlob, setImageBlob] = useState<Blob | null>(null);
   const [shareStatus, setShareStatus] = useState(
     "공유용 운세 카드를 준비하고 있어요.",
@@ -94,9 +105,14 @@ export function FortuneResult({
 
   return (
     <div className={styles.result} id="fortune-modal-description" aria-live="polite">
-      <p className={styles.kicker}>🌰 오늘의 도토리</p>
-      <h3>{fortune.title}</h3>
-      <p className={styles.message}>{fortune.message}</p>
+      <div className={styles.resultIntro}>
+        <img className={styles.resultCharacter} src={characterImage} alt="" />
+        <div>
+          <p className={styles.kicker}>🌰 오늘의 도토리</p>
+          <h3>{fortune.title}</h3>
+          <p className={styles.message}>{fortune.message}</p>
+        </div>
+      </div>
 
       <div className={styles.detailGrid}>
         <div>
@@ -117,6 +133,11 @@ export function FortuneResult({
       </div>
 
       <div className={styles.numbers}>
+        <img
+          className={styles.numbersCharacter}
+          src="/images/utang-party.png"
+          alt=""
+        />
         <div>
           <span>LUCKY NUMBERS</span>
           <strong>우땅이의 행운 번호</strong>
@@ -129,7 +150,7 @@ export function FortuneResult({
       </div>
 
       <blockquote className={styles.quote}>
-        <span aria-hidden="true">🐵</span>
+        <img className={styles.quoteCharacter} src="/images/utang-face.png" alt="" />
         <div>
           <small>우땅 한마디</small>
           <p>&ldquo;{fortune.utangMessage}&rdquo;</p>

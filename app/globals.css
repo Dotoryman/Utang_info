@@ -13,18 +13,46 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html {
+  max-width: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
 body {
+  max-width: 100%;
   margin: 0;
+  overflow-x: hidden;
   background: var(--cream);
   color: var(--ink);
   font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
   word-break: keep-all;
 }
+a, button, h1, h2, h3, p, dd, li, blockquote {
+  overflow-wrap: anywhere;
+}
 a { color: inherit; text-decoration: none; }
 button, input, textarea, select { font: inherit; }
 img { display: block; max-width: 100%; }
 main { overflow: hidden; }
+
+.site-header,
+.hero,
+.hero-copy,
+.hero-visual,
+.hello-section,
+.hello-grid,
+.hello-title-wrap,
+.hello-story,
+.expression-section,
+.expression-heading,
+.moments-heading,
+.moment-card,
+.meet-section,
+.meet-copy,
+.meet-visual {
+  min-width: 0;
+}
 
 /* Header */
 .site-header {
@@ -621,7 +649,11 @@ main { overflow: hidden; }
   .hello-section,
   .meet-section { width: min(100% - 32px, 1180px); }
   .hero { min-height: auto; padding: 46px 0 76px; gap: 38px; }
-  .hero h1 { font-size: clamp(2.75rem, 13vw, 4.2rem); }
+  .hero h1 {
+    max-width: 100%;
+    font-size: clamp(2.45rem, 12vw, 3.65rem);
+    line-height: 1.08;
+  }
   .hero-description { font-size: .98rem; }
   .hero-actions { flex-direction: column; gap: 14px; }
   .hero-actions > * { width: min(100%, 290px); }
@@ -661,10 +693,13 @@ main { overflow: hidden; }
 }
 
 @media (max-width: 430px) {
+  .site-header { align-items: center; gap: 8px; }
+  .site-header nav { min-width: 0; }
+  .nav-auth-button { max-width: 92px; overflow: hidden; text-overflow: ellipsis; }
   .hello-title-wrap h2,
   .expression-heading h2,
   .moments-heading h2,
-  .meet-copy h2 { font-size: 2.75rem; }
+  .meet-copy h2 { font-size: clamp(2.25rem, 12vw, 2.75rem); }
   .speech-bubble { right: 0; padding: 15px 20px; font-size: .86rem; }
 }
 

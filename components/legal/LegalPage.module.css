@@ -1,4 +1,6 @@
 .page {
+  width: 100%;
+  max-width: 100%;
   min-height: calc(100vh - 120px);
   padding: 42px 24px 100px;
   background:
@@ -8,7 +10,9 @@
 }
 
 .shell {
-  width: min(880px, 100%);
+  width: 100%;
+  max-width: 880px;
+  min-width: 0;
   margin: 0 auto;
 }
 
@@ -17,6 +21,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 18px;
+  min-width: 0;
   margin-bottom: 62px;
 }
 
@@ -72,6 +77,8 @@
 }
 
 .section {
+  min-width: 0;
+  max-width: 100%;
   padding: 28px 30px;
   border: 2px solid #4b2c23;
   border-radius: 24px;
@@ -110,13 +117,18 @@
   }
 
   .header {
+    flex-wrap: wrap;
+    gap: 12px;
     margin-bottom: 46px;
   }
 
   .homeLink {
     padding: 9px 12px;
     font-size: 0.78rem;
+    white-space: nowrap;
   }
+
+  .hero h1 { font-size: clamp(2.15rem, 11vw, 3rem); }
 
   .section {
     padding: 23px 20px;

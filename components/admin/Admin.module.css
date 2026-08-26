@@ -1,4 +1,6 @@
 .page {
+  width: 100%;
+  max-width: 100%;
   min-height: 100vh;
   padding: 34px 24px 80px;
   background:
@@ -17,7 +19,9 @@
 }
 
 .shell {
-  width: min(100%, 1040px);
+  width: 100%;
+  max-width: 1040px;
+  min-width: 0;
   margin: 0 auto;
 }
 
@@ -26,14 +30,24 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
+  min-width: 0;
   padding-bottom: 22px;
   border-bottom: 2px solid var(--brown);
 }
 
 .homeLink {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 15px;
+  border: 2px solid var(--brown);
+  border-radius: 999px;
+  background: var(--paper);
   color: var(--brown-soft);
   font-size: 0.88rem;
   font-weight: 850;
+  box-shadow: 3px 3px 0 var(--yellow);
 }
 
 .hero {
@@ -406,13 +420,17 @@
   inset: 0;
   display: grid;
   place-items: center;
-  padding: 20px;
+  padding:
+    max(16px, env(safe-area-inset-top))
+    max(16px, env(safe-area-inset-right))
+    max(16px, env(safe-area-inset-bottom))
+    max(16px, env(safe-area-inset-left));
   background: rgb(44 29 25 / 52%);
   backdrop-filter: blur(5px);
 }
 
 .actionModal {
-  width: min(100%, 460px);
+  width: min(460px, calc(100vw - 32px));
   padding: 34px 30px 30px;
   border: 3px solid var(--brown);
   border-radius: 30px;
@@ -614,8 +632,14 @@
   }
 
   .header {
+    flex-wrap: wrap;
+    gap: 12px;
     padding-bottom: 16px;
   }
+
+  .homeLink { white-space: nowrap; }
+
+  .hero h1 { font-size: clamp(2.2rem, 11vw, 3rem); }
 
   .hero {
     padding: 54px 0 34px;

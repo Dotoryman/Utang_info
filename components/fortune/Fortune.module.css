@@ -82,8 +82,12 @@
   z-index: 1000;
   display: grid;
   place-items: center;
-  padding: 24px;
-  overflow-y: auto;
+  padding:
+    max(18px, env(safe-area-inset-top))
+    max(18px, env(safe-area-inset-right))
+    max(18px, env(safe-area-inset-bottom))
+    max(18px, env(safe-area-inset-left));
+  overflow: hidden;
   background: rgb(44 29 25 / 72%);
   backdrop-filter: blur(7px);
   animation: backdropIn .24s ease-out both;
@@ -91,10 +95,10 @@
 
 .modal {
   position: relative;
-  width: min(640px, 100%);
-  max-height: calc(100dvh - 48px);
-  padding: 30px;
-  overflow-y: auto;
+  width: min(660px, calc(100vw - 36px));
+  max-width: 100%;
+  max-height: calc(100dvh - 36px);
+  overflow: hidden;
   background:
     radial-gradient(circle at 88% 8%, rgb(241 201 80 / 22%), transparent 24%),
     var(--paper);
@@ -104,6 +108,27 @@
     10px 12px 0 var(--yellow),
     18px 22px 38px rgb(24 12 8 / 24%);
   animation: modalIn .42s cubic-bezier(.2, .85, .25, 1.2) both;
+}
+
+.modalBody {
+  max-height: calc(100dvh - 42px);
+  padding: 30px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: var(--caramel) transparent;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+
+.modalBody::-webkit-scrollbar { width: 8px; }
+.modalBody::-webkit-scrollbar-track { background: transparent; }
+.modalBody::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: var(--caramel);
+  background-clip: padding-box;
 }
 
 .modal::before {
@@ -184,9 +209,15 @@
   border: 2px solid var(--brown);
   border-radius: 48% 52% 45% 55%;
   background: var(--yellow);
-  font-size: 1.85rem;
+  overflow: hidden;
   box-shadow: 4px 4px 0 var(--brown);
   transform: rotate(-5deg);
+}
+
+.mascot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .drawing {
@@ -196,6 +227,14 @@
   justify-items: center;
   padding: 42px 20px 20px;
   text-align: center;
+}
+
+.drawingCharacter {
+  width: 150px;
+  height: 126px;
+  margin-bottom: -4px;
+  object-fit: contain;
+  filter: drop-shadow(4px 5px 0 rgb(75 44 35 / 12%));
 }
 
 .drawingAcorns {
@@ -237,9 +276,25 @@
   animation: resultIn .42s ease-out both;
 }
 
+.resultIntro {
+  display: grid;
+  grid-template-columns: 124px minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 26px;
+}
+
+.resultCharacter {
+  width: 124px;
+  height: 124px;
+  object-fit: contain;
+  filter: drop-shadow(4px 5px 0 rgb(75 44 35 / 13%));
+  transform: rotate(-3deg);
+}
+
 .kicker {
   width: fit-content;
-  margin: 0 auto 14px;
+  margin: 0 0 12px;
   padding: 8px 13px 7px;
   border-radius: 999px;
   background: var(--yellow);
@@ -249,22 +304,22 @@
   transform: rotate(-2deg);
 }
 
-.result > h3 {
+.resultIntro h3 {
   margin: 0;
   color: var(--brown);
   font-size: clamp(1.75rem, 5vw, 2.55rem);
   line-height: 1.2;
   letter-spacing: -.055em;
-  text-align: center;
+  text-align: left;
 }
 
 .message {
   max-width: 510px;
-  margin: 18px auto 28px;
+  margin: 14px 0 0;
   color: var(--brown-soft);
   font-size: 1.02rem;
   line-height: 1.8;
-  text-align: center;
+  text-align: left;
 }
 
 .detailGrid {
@@ -311,6 +366,7 @@
 }
 
 .numbers {
+  position: relative;
   margin-top: 18px;
   padding: 22px;
   border: 3px solid var(--brown);
@@ -320,11 +376,23 @@
   box-shadow: 5px 5px 0 var(--caramel);
 }
 
+.numbersCharacter {
+  position: absolute;
+  right: 16px;
+  top: -38px;
+  width: 82px;
+  height: 76px;
+  object-fit: contain;
+  filter: drop-shadow(3px 4px 0 rgb(0 0 0 / 18%));
+  transform: rotate(5deg);
+}
+
 .numbers > div {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 20px;
+  padding-right: 74px;
 }
 
 .numbers span {
@@ -373,8 +441,14 @@
   background: rgb(241 201 80 / 16%);
 }
 
-.quote > span {
-  font-size: 1.85rem;
+.quoteCharacter {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 auto;
+  border: 2px solid var(--brown);
+  border-radius: 50%;
+  background: var(--yellow);
+  object-fit: cover;
 }
 
 .quote p {
@@ -501,40 +575,94 @@
 
 @media (max-width: 620px) {
   .backdrop {
-    place-items: end center;
-    padding: 14px;
+    place-items: center;
+    padding:
+      max(10px, env(safe-area-inset-top))
+      max(10px, env(safe-area-inset-right))
+      max(10px, env(safe-area-inset-bottom))
+      max(10px, env(safe-area-inset-left));
   }
 
   .modal {
-    max-height: calc(100dvh - 28px);
-    padding: 24px 18px;
+    width: calc(100vw - 20px);
+    max-height: calc(100dvh - 20px);
     border-radius: 28px 30px 24px 27px;
     box-shadow:
       6px 7px 0 var(--yellow),
       12px 16px 28px rgb(24 12 8 / 24%);
   }
 
+  .modalBody {
+    max-height: calc(100dvh - 26px);
+    padding: 22px 17px 26px;
+    scrollbar-gutter: auto;
+    scrollbar-width: none;
+  }
+
+  .modalBody::-webkit-scrollbar { display: none; }
+
   .modal::before { display: none; }
-  .close { top: 14px; right: 14px; width: 38px; height: 38px; }
+  .close { top: 13px; right: 13px; width: 38px; height: 38px; }
   .heading { padding-right: 48px; }
-  .mascot { width: 50px; font-size: 1.55rem; }
-  .drawing { min-height: 320px; padding-inline: 4px; }
+  .heading h2 { font-size: 1.75rem; }
+  .mascot { width: 52px; }
+  .drawing { min-height: 360px; padding: 34px 4px 18px; }
+  .drawingCharacter { width: 136px; height: 112px; }
+  .result { padding-top: 20px; }
+  .resultIntro {
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .resultCharacter { width: 88px; height: 88px; }
+  .kicker { margin-bottom: 9px; padding: 7px 11px 6px; }
+  .resultIntro h3 { font-size: clamp(1.5rem, 7vw, 2rem); }
+  .message { margin-top: 10px; font-size: .94rem; line-height: 1.7; }
   .detailGrid { grid-template-columns: 1fr; }
 
   .detailGrid > div {
     grid-template-columns: auto auto 1fr;
     align-items: center;
     justify-items: start;
-    padding: 13px 15px;
+    min-height: 64px;
+    padding: 11px 14px;
     text-align: left;
   }
 
   .detailGrid > div:nth-child(2) { transform: none; }
-  .numbers { padding: 20px 14px; }
-  .numbers > div { display: grid; justify-content: center; gap: 5px; text-align: center; }
-  .numbers ol { gap: 6px; }
-  .numbers li { font-size: .88rem; }
+  .numbers { margin-top: 26px; padding: 22px 14px 20px; }
+  .numbersCharacter { right: 10px; top: -35px; width: 70px; height: 65px; }
+  .numbers > div {
+    display: grid;
+    justify-content: start;
+    gap: 5px;
+    padding-right: 64px;
+    text-align: left;
+  }
+  .numbers ol { grid-template-columns: repeat(3, 1fr); gap: 10px 12px; }
+  .numbers li { max-width: 50px; font-size: .9rem; }
   .quote { align-items: flex-start; padding: 16px; }
+  .quoteCharacter { width: 46px; height: 46px; }
+  .actions { grid-template-columns: 1fr 1fr; }
+  .actionButton { padding-inline: 10px; }
+  .dailyNote { padding-inline: 6px; }
+}
+
+@media (max-width: 380px) {
+  .modalBody { padding-inline: 14px; }
+  .heading { gap: 10px; }
+  .heading h2 { font-size: 1.55rem; }
+  .heading p { font-size: .68rem; }
+  .mascot { width: 46px; }
+  .resultIntro {
+    display: block;
+    text-align: center;
+  }
+  .resultCharacter { width: 88px; height: 88px; margin: 0 auto 10px; }
+  .kicker { margin-inline: auto; }
+  .resultIntro h3 { font-size: 1.5rem; text-align: center; }
+  .message { text-align: center; }
+  .detailGrid strong { font-size: .82rem; }
   .actions { grid-template-columns: 1fr; }
 }
 
