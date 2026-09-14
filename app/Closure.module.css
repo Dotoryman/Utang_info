@@ -1,0 +1,147 @@
+.page {
+  --cream: #f8f0df;
+  --paper: #fffaf0;
+  --brown: #4b2c23;
+  --brown-soft: #725044;
+  --caramel: #c98664;
+  --yellow: #f1c950;
+
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 32px 20px;
+  background:
+    radial-gradient(circle at 16% 14%, rgb(228 173 142 / 48%), transparent 28%),
+    radial-gradient(circle at 88% 88%, rgb(241 201 80 / 30%), transparent 26%),
+    var(--cream);
+  color: var(--brown);
+}
+
+.card {
+  width: min(100%, 480px);
+  padding: 38px 30px 28px;
+  border: 3px solid var(--brown);
+  border-radius: 30px;
+  background: var(--paper);
+  box-shadow: 9px 10px 0 rgb(75 44 35 / 82%);
+  text-align: center;
+}
+
+.character {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 12px;
+  object-fit: contain;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--caramel);
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.14em;
+}
+
+.card h1 {
+  margin: 0;
+  font-size: clamp(2rem, 9vw, 2.75rem);
+  line-height: 1.12;
+  letter-spacing: -0.055em;
+}
+
+.notice {
+  margin: 26px 0 28px;
+  padding: 21px 20px;
+  border: 1px dashed var(--caramel);
+  border-radius: 16px;
+  background: #f8ead2;
+}
+
+.notice p {
+  margin: 0;
+  color: var(--brown-soft);
+  font-size: 1rem;
+  font-weight: 750;
+  line-height: 1.7;
+}
+
+.notice p + p {
+  margin-top: 4px;
+}
+
+.instagramButton {
+  min-height: 62px;
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 20px;
+  border: 3px solid var(--brown);
+  border-radius: 17px;
+  background: #ffd84f;
+  color: var(--brown);
+  font-size: 1rem;
+  font-weight: 950;
+  line-height: 1.35;
+  box-shadow: 5px 6px 0 #b78235;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.instagramButton:hover {
+  transform: translate(3px, 3px);
+  box-shadow: 2px 3px 0 #b78235;
+}
+
+.instagramButton:active {
+  transform: translate(5px, 6px);
+  box-shadow: none;
+}
+
+.instagramButton:focus-visible {
+  outline: 4px solid rgb(201 134 100 / 45%);
+  outline-offset: 4px;
+}
+
+.instagramButton span {
+  font-size: 1.15em;
+}
+
+@media (max-width: 520px) {
+  .page {
+    padding: 18px 14px 26px;
+  }
+
+  .card {
+    padding: 30px 20px 22px;
+    border-radius: 25px;
+    box-shadow: 7px 8px 0 rgb(75 44 35 / 82%);
+  }
+
+  .character {
+    width: 132px;
+    height: 132px;
+    margin-bottom: 10px;
+  }
+
+  .notice {
+    margin: 22px 0 24px;
+    padding: 18px 15px;
+  }
+
+  .notice p {
+    font-size: 0.94rem;
+  }
+
+  .instagramButton {
+    min-height: 58px;
+    padding-inline: 14px;
+    font-size: 0.94rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .instagramButton {
+    transition: none;
+  }
+}

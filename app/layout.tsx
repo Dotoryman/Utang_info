@@ -1,8 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
 
-import { SiteFooter } from "@/components/site/SiteFooter";
-
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -17,9 +15,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const protocol = requestHeaders.get("x-forwarded-proto") ??
     (host.startsWith("localhost") ? "http" : "https");
   const origin = `${protocol}://${host}`;
-  const title = "우땅랜드";
+  const title = "우땅랜드 운영 안내";
   const description =
-    "엉뚱하고 솔직하고 다정한 원숭이 캐릭터 우땅이를 좋아하는 사람들이 함께 즐기는 비영리 팬페이지입니다.";
+    "우땅랜드는 우땅이 공식 홈페이지가 아닙니다. 우땅이 공식 인스타그램을 확인해 주세요.";
 
   return {
     title,
@@ -33,13 +31,17 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       type: "website",
-      images: [{ url: `${origin}/og.png`, width: 1728, height: 908, alt: "UTANG! 우땅이 소개" }],
+      images: [{ url: `${origin}/closure-utang.png`, width: 512, height: 512, alt: "우땅랜드 운영 안내" }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [`${origin}/og.png`],
+      images: [`${origin}/closure-utang.png`],
+    },
+    robots: {
+      index: false,
+      follow: true,
     },
   };
 }
@@ -49,7 +51,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="ko">
       <body>
         {children}
-        <SiteFooter />
       </body>
     </html>
   );
