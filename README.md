@@ -1,3 +1,6 @@
+https://utangland.cloud
+https://dotoryman.com
+
 # UtangLand
 
 우땅이 소개, 오늘의 운세와 커뮤니티 기능을 제공하는 웹 서비스입니다.
