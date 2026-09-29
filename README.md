@@ -9,5 +9,3 @@ https://dotoryman.com
 A web service featuring the Utang character, daily fortunes, and a community space.
 
 **언어 및 기술 · Languages & Technologies:** TypeScript · CSS · JavaScript · React · Vinext · Cloudflare Workers · D1 · R2 · Drizzle ORM
-
-<!-- Temporary README contribution marker: 2026-09-29 Asia/Seoul; immediately reverted. -->
