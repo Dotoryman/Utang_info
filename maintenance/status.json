@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "repository": "Dotoryman/Utang_info",
+  "project_kind": "web",
+  "checked_date_kst": "2026-10-01",
+  "checked_at_utc": "2026-10-01T00:10:40.253Z",
+  "default_branch": "main",
+  "inspected_commit": "2940de95387bf204fce365df67f03ef9e6898251",
+  "workflow_run": "https://github.com/Dotoryman/Utang_info/actions/runs/36794816495",
+  "inventory": {
+    "tracked_project_files": 156,
+    "tracked_project_bytes": 4452952,
+    "content_sha256": "b7d0479ae51cefc37bb1b1ffb30f0127f2ed6d914b1c82a553e0e6bfecd782fc",
+    "package": {
+      "name": "utang-info",
+      "version": "1.1.0",
+      "node": ">=22.13.0",
+      "scripts": [
+        "build",
+        "build:static",
+        "check",
+        "db:generate",
+        "db:migrate:local",
+        "deploy",
+        "deploy:check",
+        "dev",
+        "lint",
+        "start",
+        "test",
+        "test:unit"
+      ],
+      "direct_dependencies": 4,
+      "development_dependencies": 16,
+      "locked_packages": 732,
+      "lockfile_version": 3
+    },
+    "source_files": 83,
+    "test_files": 5,
+    "sql_migrations": 6,
+    "public_assets": 13
+  },
+  "checks": [
+    {
+      "name": "README present and nonempty",
+      "passed": true,
+      "details": "Tracked README.md"
+    },
+    {
+      "name": "npm lock root matches manifest",
+      "passed": true,
+      "details": "Compared name, version and declared dependency specifications; npm ci was not run."
+    },
+    {
+      "name": "Project source inventory nonempty",
+      "passed": true,
+      "details": "app, components, domain, infrastructure, lib, worker, static-src"
+    },
+    {
+      "name": "Cloudflare configuration present",
+      "passed": true,
+      "details": "wrangler.jsonc"
+    }
+  ],
+  "result": "passed",
+  "scope": "Repository structure, manifest consistency and tracked asset references only. Application tests, builds, dependency vulnerability scans and live service availability are not assessed."
+}
